@@ -48,11 +48,14 @@ export function DatasetSection() {
             The dataset consists of six input features that undergo preprocessing before being used to train the machine learning model.
           </p>
         </div>
+      </div>
 
-        {/* Features Grid */}
-        <div className="mb-12">
+      {/* Features Grid — full-width */}
+      <div className="px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="mx-auto max-w-6xl">
           <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 pl-1">Input Features</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
             {FEATURES.map((f, i) => {
               const Icon = f.icon;
               return (
@@ -78,6 +81,7 @@ export function DatasetSection() {
           </div>
         </div>
 
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Target */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
