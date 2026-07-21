@@ -25,9 +25,6 @@ export function FooterSection() {
                 Medical Insurance Cost Predictor
               </span>
             </div>
-            <p className="text-xs text-slate-500 max-w-sm leading-relaxed font-mono">
-              Academic ML demonstration. Predictions operate as uncalibrated estimates; not valid for actuarial underwriting.
-            </p>
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-4">
