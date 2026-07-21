@@ -7,13 +7,13 @@ const WORKFLOW_STEPS = [
   { num: 1, title: 'Setup', desc: 'Import libraries, configure environment, and define random seed for reproducibility.' },
   { num: 2, title: 'Load Data', desc: 'Read insurance.csv into a Pandas DataFrame and inspect shape, dtypes, and sample rows.' },
   { num: 3, title: 'Exploratory Data Analysis', desc: 'Examine distributions, correlations, and relationships between features and the target.' },
-  { num: 4, title: 'Data Preprocessing', desc: 'Encode categoricals with one-hot encoding; scale numerics for linear models; log-transform the target.' },
+  { num: 4, title: 'Data Preprocessing', desc: 'Encode categorical features using One-Hot Encoding, apply feature scaling where required, and perform target log transformation.' },
   { num: 5, title: 'Baseline Model', desc: 'Train a plain Linear Regression as a performance baseline.' },
-  { num: 6, title: 'Model Selection via Cross-Validation', desc: 'Evaluate six candidate models using 5-fold cross-validation and select the best performer.' },
-  { num: 7, title: 'Hyperparameter Tuning', desc: 'Run GridSearchCV on the top model to find optimal hyperparameters.' },
+  { num: 6, title: 'Model Selection via Cross-Validation', desc: 'Evaluate six candidate models using 5-fold cross-validation. Select the model with the lowest cross-validation MAE.' },
+  { num: 7, title: 'Hyperparameter Tuning', desc: 'Optimize the selected Random Forest model using GridSearchCV.' },
   { num: 8, title: 'Retrain with Best Parameters', desc: 'Refit the tuned model on the full training set using the parameters found in step 7.' },
   { num: 9, title: 'Final Evaluation', desc: 'Assess generalization on the held-out test set using MAE, RMSE, and R².' },
-  { num: 10, title: 'Build Predictive System', desc: 'Serialize the trained pipeline with joblib and expose it through a FastAPI endpoint.' },
+  { num: 10, title: 'Deploy Predictive System', desc: 'Serialize the trained pipeline with joblib and expose it through a FastAPI endpoint.' },
 ];
 
 const MODELS = [
@@ -44,7 +44,7 @@ export function AboutModelSection() {
             Development Pipeline
           </h2>
           <p className="max-w-2xl text-lg text-slate-600 leading-relaxed">
-            The architecture follows a rigorous machine learning lifecycle, transitioning from raw data ingestion to a production-ready inference API.
+            The machine learning model was developed through a structured workflow including data preparation, model evaluation, hyperparameter tuning, and deployment for insurance cost prediction.
           </p>
         </div>
 
@@ -56,9 +56,9 @@ export function AboutModelSection() {
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
                 <CardHeader className="pb-6 border-b border-border relative z-10">
                   <CardTitle className="text-base font-semibold tracking-wide flex items-center gap-2 text-slate-900">
-                    Candidate Architectures
+                    Models Evaluated
                   </CardTitle>
-                  <p className="text-xs text-slate-500 mt-1">Cross-validated relative performance (MAE proxy)</p>
+                  <p className="text-xs text-slate-500 mt-1">5-Fold Cross-Validation Performance</p>
                 </CardHeader>
                 <CardContent className="pt-6 relative z-10 space-y-5">
                   {MODELS.map((model, idx) => (
@@ -91,10 +91,10 @@ export function AboutModelSection() {
                   <h4 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-4">Selection Criteria</h4>
                   <div className="space-y-4 text-sm text-slate-600">
                     <p>
-                      Candidate models underwent <strong className="text-slate-900 font-medium">5-fold cross-validation</strong> to establish stable baseline metrics.
+                      Six regression models were evaluated using <strong className="text-slate-900 font-medium">5-fold cross-validation</strong>. The model with the lowest Mean Absolute Error (MAE) was selected for hyperparameter tuning.
                     </p>
                     <p>
-                      The Random Forest regressor demonstrated superior generalisation capability and was subsequently optimized via <strong className="text-slate-900 font-medium">GridSearchCV</strong> over a constrained hyperparameter space.
+                      Random Forest achieved the lowest cross-validation MAE and was selected for hyperparameter optimization using <strong className="text-slate-900 font-medium">GridSearchCV</strong>.
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-6 border-t border-border mt-6">

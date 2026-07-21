@@ -1,0 +1,178 @@
+Tab 1 — Development Pipeline
+1. Description
+
+Current:
+
+The architecture follows a rigorous machine learning lifecycle, transitioning from raw data ingestion to a production-ready inference API.
+
+Change to:
+
+The machine learning model was developed through a structured workflow including data preparation, model evaluation, hyperparameter tuning, and deployment for insurance cost prediction.
+
+This better matches what the tab is about.
+
+2. Candidate Architectures ❌
+
+This is incorrect terminology.
+
+Change to
+
+Models Evaluated
+
+or
+
+Candidate Machine Learning Models
+3. Cross-validated relative performance (MAE proxy)
+
+Change to
+
+5-Fold Cross-Validation Performance
+
+or
+
+Cross-Validation Model Comparison
+4. Selection Criteria
+
+Current
+
+Candidate models underwent 5-fold cross-validation to establish stable baseline metrics.
+
+Better
+
+Six regression models were evaluated using 5-fold cross-validation. The model with the lowest Mean Absolute Error (MAE) was selected for hyperparameter tuning.
+
+5. Random Forest paragraph
+
+Current
+
+demonstrated superior generalisation capability
+
+Better
+
+Random Forest achieved the lowest cross-validation MAE and was selected for hyperparameter optimization using GridSearchCV.
+
+This matches your actual implementation.
+
+6. Execution Sequence
+
+Very good.
+
+Only change
+
+Phase 4
+
+Instead of
+
+scale numerics for linear models
+
+write
+
+Encode categorical features using One-Hot Encoding, apply feature scaling where required, and perform target log transformation.
+
+Phase 6
+
+Instead of
+
+select the best performer
+
+write
+
+Select the model with the lowest cross-validation MAE.
+
+Phase 7
+
+Instead of
+
+Run GridSearchCV on the top model
+
+write
+
+Optimize the selected Random Forest model using GridSearchCV.
+
+Phase 10
+
+Instead of
+
+Build Predictive System
+
+write
+
+Deploy Predictive System
+7. System Topology
+
+This needs the biggest change.
+
+Instead of
+
+React
+
+↓
+
+Validation
+
+↓
+
+FastAPI
+
+↓
+
+Pipeline
+
+↓
+
+Inference
+
+↓
+
+JSON
+
+I'd write
+
+React Client
+
+↓
+
+Input Validation
+
+↓
+
+FastAPI Prediction API
+
+↓
+
+Preprocessing Pipeline
+
+↓
+
+Random Forest Model
+
+↓
+
+Prediction Response
+8. Pipeline
+
+Instead of
+
+incoming vector
+
+write
+
+incoming feature values
+
+or
+
+incoming input features
+
+"Vector" is technically correct internally but isn't common UI terminology.
+
+9. Inference Engine
+
+Instead of
+
+Joblib serialized Random Forest regressor
+
+write
+
+Trained Random Forest Regression Model
+
+Cleaner.
