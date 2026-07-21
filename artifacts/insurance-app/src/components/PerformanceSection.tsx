@@ -1,9 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Target, TrendingDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, animate } from 'framer-motion';
 import {
-  RadialBarChart,
-  RadialBar,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -14,7 +13,65 @@ import {
   Cell,
 } from 'recharts';
 
-const R2_DATA = [{ name: 'R²', value: 90, fill: '#0d9488' }];
+// SVG arc gauge constants
+const GAUGE_R   = 52;
+const GAUGE_CX  = 64;
+const GAUGE_CY  = 64;
+const CIRCUM    = 2 * Math.PI * GAUGE_R;          // ≈ 326.73
+const ARC_DEG   = 260;
+const ARC_LEN   = (ARC_DEG / 360) * CIRCUM;       // ≈ 235.97
+const GAP_LEN   = CIRCUM - ARC_LEN;               // ≈ 90.76
+const TARGET    = 0.9;
+
+function R2Gauge() {
+  const [display, setDisplay] = useState('0.000');
+  const targetOffset = ARC_LEN * (1 - TARGET);    // ≈ 23.6 (10% empty = offset from start)
+
+  useEffect(() => {
+    const ctrl = animate(0, TARGET, {
+      duration: 1.5,
+      delay: 0.4,
+      ease: 'easeOut',
+      onUpdate: (v) => setDisplay(v.toFixed(3)),
+    });
+    return ctrl.stop;
+  }, []);
+
+  return (
+    <div className="relative w-32 h-32">
+      <svg width="128" height="128" viewBox="0 0 128 128">
+        {/* Rotate so arc opens at the bottom (gap centred at 6 o'clock) */}
+        <g transform={`rotate(140, ${GAUGE_CX}, ${GAUGE_CY})`}>
+          {/* Track */}
+          <circle
+            cx={GAUGE_CX} cy={GAUGE_CY} r={GAUGE_R}
+            fill="none"
+            stroke="#e2e8f0"
+            strokeWidth="10"
+            strokeDasharray={`${ARC_LEN} ${GAP_LEN}`}
+            strokeLinecap="round"
+          />
+          {/* Animated fill */}
+          <motion.circle
+            cx={GAUGE_CX} cy={GAUGE_CY} r={GAUGE_R}
+            fill="none"
+            stroke="#0d9488"
+            strokeWidth="10"
+            strokeDasharray={`${ARC_LEN} ${GAP_LEN}`}
+            strokeLinecap="round"
+            initial={{ strokeDashoffset: ARC_LEN }}
+            animate={{ strokeDashoffset: targetOffset }}
+            transition={{ duration: 1.5, delay: 0.4, ease: 'easeOut' }}
+          />
+        </g>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-2xl font-bold text-primary font-mono tabular-nums">{display}</span>
+        <span className="text-[9px] text-slate-400 uppercase tracking-wide mt-0.5">Variance</span>
+      </div>
+    </div>
+  );
+}
 
 const CHART_DATA = [
   { name: 'Linear', value: 4221.96 },
@@ -72,26 +129,7 @@ export function PerformanceSection() {
           >
             <Card className="bg-white border-border shadow-lg h-full flex flex-col items-center justify-center py-8 px-4">
               <p className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-4">R² Score</p>
-              <div className="relative w-32 h-32">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="70%"
-                    outerRadius="100%"
-                    startAngle={220}
-                    endAngle={-40}
-                    data={R2_DATA}
-                    barSize={12}
-                  >
-                    <RadialBar dataKey="value" cornerRadius={8} background={{ fill: '#e2e8f0' }} />
-                  </RadialBarChart>
-                </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-primary font-mono">0.900</span>
-                  <span className="text-[9px] text-slate-400 uppercase tracking-wide mt-0.5">Variance</span>
-                </div>
-              </div>
+              <R2Gauge />
               <p className="text-[10px] text-slate-500 text-center mt-4 leading-snug">
                 90% of insurance cost variation is explained by the model
               </p>
