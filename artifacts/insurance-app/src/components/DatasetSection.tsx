@@ -112,7 +112,7 @@ export function DatasetSection() {
               <ul className="space-y-4">
                 {EDA_INSIGHTS.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <span className="text-primary mt-0.5 opacity-70">■</span>
+                    <span className="text-primary mt-1 shrink-0 text-base">■</span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -129,7 +129,7 @@ export function DatasetSection() {
               <ul className="space-y-4">
                 {PREPROCESSING.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <span className="text-primary mt-0.5 opacity-70">▹</span>
+                    <span className="text-primary mt-1 shrink-0 text-base">▹</span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
