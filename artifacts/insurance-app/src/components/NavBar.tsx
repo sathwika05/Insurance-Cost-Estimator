@@ -44,14 +44,14 @@ export function NavBar({ active, onNav }: NavBarProps) {
           </div>
 
           {/* Desktop Nav Tabs */}
-          <nav className="hidden md:flex space-x-2 h-full">
+          <nav className="hidden md:flex space-x-8 h-full">
             {NAV_ITEMS.map((tab) => {
               const isActive = active === tab.id;
               return (
                 <div
                   key={tab.id}
                   onClick={() => handleNav(tab.id)}
-                  className={`flex flex-col justify-center px-4 h-full border-b-[3px] cursor-pointer transition-colors hover:bg-white/5 ${
+                  className={`flex flex-col justify-center px-2 h-full border-b-[3px] cursor-pointer transition-colors hover:bg-white/5 ${
                     isActive ? 'border-[#0d9488]' : 'border-transparent'
                   }`}
                 >
