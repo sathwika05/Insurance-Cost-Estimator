@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const PANELS: Record<TabId, React.ReactNode> = {
   predictor:   <PredictorSection />,
-  about:       <div className="space-y-0 divide-y divide-white/5"><AboutModelSection /><ArchitectureSection /></div>,
+  about:       <div className="space-y-0 divide-y divide-border/50"><AboutModelSection /><ArchitectureSection /></div>,
   performance: <PerformanceSection />,
   dataset:     <DatasetSection />,
 };
@@ -19,12 +19,10 @@ export default function Home() {
   const [active, setActive] = useState<TabId>('predictor');
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-background text-foreground">
-      {/* Sidebar / mobile top bar */}
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
       <NavBar active={active} onNav={setActive} />
 
-      {/* Content panel */}
-      <main className="flex-1 overflow-y-auto md:ml-64 mt-16 md:mt-0 relative flex flex-col scroll-smooth">
+      <main className="flex-1 w-full pt-[72px] flex flex-col scroll-smooth relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={active}

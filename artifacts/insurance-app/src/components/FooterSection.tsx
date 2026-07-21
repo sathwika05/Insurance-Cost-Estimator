@@ -22,7 +22,7 @@ export function FooterSection() {
                 <Hexagon className="h-4 w-4 text-primary" />
               </span>
               <span className="font-bold text-slate-900 uppercase tracking-wide text-sm">
-                Omni<span className="text-primary">Predict</span>
+                Medical Insurance Cost Predictor
               </span>
             </div>
             <p className="text-xs text-slate-500 max-w-sm leading-relaxed font-mono">

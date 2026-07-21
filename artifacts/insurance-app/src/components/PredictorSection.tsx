@@ -1,39 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { usePredictInsuranceCost, useHealthCheck } from '@workspace/api-client-react';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Loader2,
-  AlertCircle,
-  RefreshCw,
-  TrendingUp,
-  PlusCircle,
-  ActivitySquare,
-  CheckCircle2,
-} from 'lucide-react';
+import { usePredictInsuranceCost } from '@workspace/api-client-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Loader2, RefreshCw } from 'lucide-react';
 
-// ── Form schema ────────────────────────────────────────────────────────────────
 const formSchema = z.object({
   age: z.coerce
     .number({ invalid_type_error: 'Age is required' })
@@ -53,7 +25,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// ── Helper ────────────────────────────────────────────────────────────────────
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -70,7 +41,6 @@ function humanise(key: string, val: string | number) {
   return String(val);
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
 export function PredictorSection() {
   const [result, setResult] = useState<{
     estimated_annual_cost: number;
@@ -80,17 +50,11 @@ export function PredictorSection() {
   const [apiError, setApiError] = useState<string | null>(null);
 
   const predictMutation = usePredictInsuranceCost();
-  const { data: health, isLoading: isHealthLoading } = useHealthCheck();
 
-  const form = useForm<FormValues>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      age: undefined,
-      sex: undefined,
-      bmi: undefined,
       children: 0,
-      smoker: undefined,
-      region: undefined,
     },
   });
 
@@ -115,392 +79,255 @@ export function PredictorSection() {
   };
 
   const handleReset = () => {
-    form.reset();
+    reset();
     setResult(null);
     setSubmittedValues(null);
     setApiError(null);
   };
 
   return (
-    <motion.section 
-      id="predictor" 
-      className="min-h-full pb-20"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      {/* ── Hero Band ── */}
-      <div className="relative overflow-hidden bg-white border-b border-border mb-10 pt-16 pb-12 shadow-sm border-t-4 border-t-primary">
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[400px] h-[400px] bg-blue-50 rounded-full blur-[80px] pointer-events-none" />
-        
-        <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20">
-                <ActivitySquare className="h-5 w-5" />
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-                Inference <span className="text-primary font-light">Engine</span>
-              </h1>
-            </div>
-            <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-              Execute real-time predictions against our tuned Random Forest ensemble. 
-              Input patient demographic and health factors to generate high-confidence premium estimations.
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 flex flex-col md:flex-row gap-8">
+      {/* Left Column: Form (~55%) */}
+      <div className="w-full md:w-[55%] flex flex-col gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-8 pt-8 pb-6 border-b border-slate-100">
+            <h2 className="text-xl font-semibold text-slate-900">
+              Patient Information
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Complete all fields to generate a cost estimate
             </p>
           </div>
-          
-          <div className="flex items-center self-start md:self-auto bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
-            {isHealthLoading ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-3 w-3 animate-spin text-primary/70" />
-                <span className="text-xs font-mono text-primary/70">CONNECTING...</span>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <div className="p-8 flex flex-col gap-6">
+              {/* Row 1: Age + Sex */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    {...register('age')}
+                    placeholder="e.g. 35"
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow placeholder:text-slate-400"
+                  />
+                  {errors.age && <span className="text-xs text-red-500">{errors.age.message}</span>}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    Sex
+                  </label>
+                  <select
+                    {...register('sex')}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow appearance-none"
+                  >
+                    <option value="">Select sex...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  {errors.sex && <span className="text-xs text-red-500">{errors.sex.message}</span>}
+                </div>
               </div>
-            ) : health?.status === 'ok' ? (
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
-                </span>
-                <span className="text-xs font-mono font-medium tracking-widest text-primary uppercase">Model Ready</span>
+
+              {/* Row 2: BMI + Children */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    BMI (Body Mass Index)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    {...register('bmi')}
+                    placeholder="e.g. 24.5"
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow placeholder:text-slate-400"
+                  />
+                  {errors.bmi && <span className="text-xs text-red-500">{errors.bmi.message}</span>}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    Number of Children
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    {...register('children')}
+                    placeholder="0"
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow placeholder:text-slate-400"
+                  />
+                  {errors.children && <span className="text-xs text-red-500">{errors.children.message}</span>}
+                </div>
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <div className="h-2.5 w-2.5 rounded-full bg-destructive" />
-                <span className="text-xs font-mono font-medium tracking-widest text-destructive uppercase">Offline</span>
+
+              {/* Row 3: Smoker + Region */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    Smoker
+                  </label>
+                  <select
+                    {...register('smoker')}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow appearance-none"
+                  >
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                  {errors.smoker && <span className="text-xs text-red-500">{errors.smoker.message}</span>}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                    Region
+                  </label>
+                  <select
+                    {...register('region')}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow appearance-none"
+                  >
+                    <option value="">Select region...</option>
+                    <option value="northeast">Northeast</option>
+                    <option value="northwest">Northwest</option>
+                    <option value="southeast">Southeast</option>
+                    <option value="southwest">Southwest</option>
+                  </select>
+                  {errors.region && <span className="text-xs text-red-500">{errors.region.message}</span>}
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+
+            <div className="px-8 pb-8 pt-4">
+              <button
+                type="submit"
+                disabled={predictMutation.isPending}
+                className="w-full bg-[#0d9488] hover:bg-teal-700 text-white font-semibold py-3 px-4 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0d9488] flex items-center justify-center gap-2"
+              >
+                {predictMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Calculating...
+                  </>
+                ) : (
+                  'Calculate Cost'
+                )}
+              </button>
+            </div>
+          </form>
         </div>
+        
+        {/* Error Message */}
+        <AnimatePresence>
+          {apiError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 flex items-center justify-between"
+            >
+              <span className="text-sm font-medium">{apiError}</span>
+              <button onClick={() => setApiError(null)} className="text-red-500 hover:text-red-700">
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* ── Form Column ── */}
-          <div className="lg:col-span-12">
+      {/* Right Column: Result Panel (~45%) */}
+      <div className="w-full md:w-[45%]">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-[104px]">
+          {/* Top Border Indicator */}
+          <div className="h-1 w-full bg-[#0d9488]"></div>
+
+          <div className="p-8">
+            <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+              Estimated Annual Cost
+            </h3>
+            <p className="text-sm text-slate-400 mb-6 mt-1">
+              Based on your patient profile
+            </p>
+
             <AnimatePresence mode="wait">
-              {!result && (
-                <motion.div
-                  key="form"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="shadow-lg border-border bg-white">
-                    <CardHeader className="border-b border-border pb-6">
-                      <CardTitle className="text-xl font-bold flex items-center gap-2 text-slate-900">
-                        <TrendingUp className="h-5 w-5 text-primary" />
-                        Patient Parameters
-                      </CardTitle>
-                      <CardDescription className="text-xs uppercase tracking-widest font-mono text-slate-500">
-                        Input feature vector for model evaluation
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-8">
-                      <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
-                          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                            {/* Age */}
-                            <FormField
-                              control={form.control}
-                              name="age"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Age</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11"
-                                      type="number"
-                                      placeholder="e.g. 35"
-                                      min={18}
-                                      max={100}
-                                      {...field}
-                                      value={field.value ?? ''}
-                                    />
-                                  </FormControl>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Sex */}
-                            <FormField
-                              control={form.control}
-                              name="sex"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Biological Sex</FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
-                                        <SelectValue placeholder="Select..." />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                      <SelectContent>
-                                        <SelectItem value="male">Male</SelectItem>
-                                        <SelectItem value="female">Female</SelectItem>
-                                      </SelectContent>
-                                  </Select>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* BMI */}
-                            <FormField
-                              control={form.control}
-                              name="bmi"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">BMI Value</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11"
-                                      type="number"
-                                      placeholder="e.g. 24.5"
-                                      step="0.1"
-                                      min={10}
-                                      max={70}
-                                      {...field}
-                                      value={field.value ?? ''}
-                                    />
-                                  </FormControl>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Children */}
-                            <FormField
-                              control={form.control}
-                              name="children"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Dependents</FormLabel>
-                                  <Select
-                                    onValueChange={(val) => field.onChange(Number(val))}
-                                    value={String(field.value ?? 0)}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
-                                        <SelectValue placeholder="Select..." />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                                        <SelectItem key={num} value={String(num)}>
-                                          {num}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Smoker */}
-                            <FormField
-                              control={form.control}
-                              name="smoker"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Tobacco Use</FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
-                                        <SelectValue placeholder="Select..." />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      <SelectItem value="no">Non-Smoker</SelectItem>
-                                      <SelectItem value="yes">Smoker</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Region */}
-                            <FormField
-                              control={form.control}
-                              name="region"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">US Region</FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
-                                        <SelectValue placeholder="Select..." />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      <SelectItem value="northeast">Northeast</SelectItem>
-                                      <SelectItem value="northwest">Northwest</SelectItem>
-                                      <SelectItem value="southeast">Southeast</SelectItem>
-                                      <SelectItem value="southwest">Southwest</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage className="text-xs" />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-
-                          <div className="flex gap-4 pt-4 border-t border-border">
-                            <Button
-                              type="submit"
-                              disabled={predictMutation.isPending}
-                              className="h-12 px-8 flex-1 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all font-bold text-sm tracking-wide"
-                            >
-                              {predictMutation.isPending ? (
-                                <motion.div
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  className="flex items-center gap-2"
-                                >
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                  EVALUATING MODEL...
-                                </motion.div>
-                              ) : (
-                                <div className="flex items-center gap-2">
-                                  RUN PREDICTION <TrendingUp className="h-4 w-4 ml-1 opacity-70" />
-                                </div>
-                              )}
-                            </Button>
-                            {apiError && (
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={handleReset}
-                                className="h-12 border-slate-200 text-slate-700 hover:bg-slate-50"
-                              >
-                                <RefreshCw className="mr-2 h-4 w-4" />
-                                Reset
-                              </Button>
-                            )}
-                          </div>
-                        </form>
-                      </Form>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* ── Error alert ── */}
-            {apiError && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6"
-              >
-                <Alert variant="destructive" className="bg-destructive/10 border-destructive/30 backdrop-blur-md">
-                  <AlertCircle className="h-4 w-4 text-destructive" />
-                  <AlertTitle className="text-destructive font-semibold">Prediction Failed</AlertTitle>
-                  <AlertDescription className="text-destructive/80 text-sm">{apiError}</AlertDescription>
-                </Alert>
-              </motion.div>
-            )}
-
-            {/* ── Result Card ── */}
-            <AnimatePresence>
-              {result && submittedValues && !apiError && (
+              {result && submittedValues && !apiError ? (
                 <motion.div
                   key="result"
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  className="space-y-6"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col h-full"
                 >
-                  <Card className="relative overflow-hidden border border-border border-t-4 border-t-primary shadow-lg bg-white">
-                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[80px]" />
-                    <CardHeader className="border-b border-slate-100 pb-4 relative z-10 flex flex-row items-center justify-between">
-                      <div>
-                        <CardTitle className="text-xs uppercase tracking-widest text-primary font-mono">
-                          Model Output
-                        </CardTitle>
-                        <p className="text-sm text-slate-700 font-semibold mt-1">Estimated Annual Charge</p>
-                      </div>
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                        <span className="text-[10px] font-mono text-primary font-semibold uppercase tracking-wider">Success</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-10 pb-12 relative z-10 text-center">
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
-                      >
-                        <h2 className="text-6xl md:text-7xl font-bold font-mono tracking-tighter text-teal-800 drop-shadow-sm">
-                          {formatCurrency(result.estimated_annual_cost)}
-                        </h2>
-                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-50 border border-slate-200">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
-                          <p className="text-xs font-mono text-slate-500 tracking-wider">
-                            BASE CURRENCY: {result.currency}
-                          </p>
-                        </div>
-                      </motion.div>
-                    </CardContent>
-                  </Card>
+                  <div className="mb-8">
+                    <span className="text-5xl font-bold tracking-tight text-[#0d9488]">
+                      {formatCurrency(result.estimated_annual_cost)}
+                    </span>
+                    <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                       <span className="w-1.5 h-1.5 rounded-full bg-teal-500/50"></span>
+                       Currency: {result.currency}
+                    </div>
+                  </div>
 
-                  <Card className="border border-primary/20 bg-primary/5">
-                    <CardHeader className="pb-4 border-b border-primary/10">
-                      <CardTitle className="text-xs font-mono uppercase tracking-widest text-primary/80">
-                        Feature Vector Used
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-6">
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                        {(
-                          [
-                            ['Age', submittedValues.age, 'YRS'],
-                            ['Sex', humanise('sex', submittedValues.sex), ''],
-                            ['BMI', submittedValues.bmi, ''],
-                            ['Children', submittedValues.children, ''],
-                            ['Smoker', humanise('smoker', submittedValues.smoker), ''],
-                            ['Region', humanise('region', submittedValues.region), ''],
-                          ] as [string, string | number, string][]
-                        ).map(([label, value, unit], i) => (
-                          <motion.div 
-                            key={label}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 + (i * 0.05) }}
-                            className="bg-white p-4 rounded-xl border border-primary/10 shadow-sm"
-                          >
-                            <dt className="text-[10px] uppercase font-mono tracking-widest text-slate-500 mb-1">{label}</dt>
-                            <dd className="text-sm font-semibold text-slate-900 flex items-baseline gap-1">
-                              {value}
-                              {unit && <span className="text-[10px] text-slate-400 font-mono">{unit}</span>}
-                            </dd>
-                          </motion.div>
-                        ))}
+                  {/* Subtle Grid Summary */}
+                  <div className="rounded-lg bg-slate-50 border border-slate-100 p-5 mb-8">
+                    <h4 className="text-xs uppercase tracking-wide font-semibold text-slate-400 mb-4">
+                      Profile Summary
+                    </h4>
+                    <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">Age</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.age}</span>
                       </div>
-                      
-                      <div className="mt-8 flex justify-center">
-                        <Button
-                          onClick={handleReset}
-                          variant="outline"
-                          className="h-11 px-8 rounded-full border-primary/20 bg-white hover:bg-primary/5 hover:text-primary transition-colors text-xs font-semibold tracking-wide uppercase text-slate-700"
-                        >
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          New Evaluation
-                        </Button>
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">Sex</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{humanise('sex', submittedValues.sex)}</span>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">BMI</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.bmi}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">Children</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.children}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">Smoker</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{humanise('smoker', submittedValues.smoker)}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-slate-400 text-xs">Region</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{humanise('region', submittedValues.region)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleReset}
+                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-4 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200 text-sm"
+                  >
+                    New Prediction
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-12 text-center"
+                >
+                  <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center mb-4">
+                    <span className="text-slate-300 text-2xl font-serif italic">$</span>
+                  </div>
+                  <p className="text-slate-500 font-medium">No prediction generated</p>
+                  <p className="text-sm text-slate-400 mt-1 max-w-[200px]">
+                    Enter patient details and click Calculate Cost to see the estimate here.
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
