@@ -1,0 +1,243 @@
+Upgrade my existing Medical Insurance Cost Predictor application without changing the current prediction functionality.
+
+Current application
+
+The application already has:
+
+A clean medical insurance prediction form
+Inputs for:
+Age
+Sex
+BMI
+Number of Children
+Smoker Status
+Region
+A “Calculate Cost” button
+A machine learning model connected through the backend
+A Next.js frontend
+A FastAPI backend
+
+Keep the existing form design and API integration working.
+
+Goal
+
+Turn the current single-screen application into a polished machine learning project dashboard suitable for a university submission.
+
+Use a clean, modern, professional healthcare-style design. Keep the existing teal accent color, white background, rounded cards, soft shadows, and spacious layout.
+
+Do not add unnecessary complexity.
+
+Add a top navigation bar
+
+Add these navigation items:
+
+Predictor
+About Model
+Performance
+Dataset
+
+The navigation can scroll to sections on the same page. Do not create separate pages unless necessary.
+
+1. Predictor Section
+
+Keep the current prediction form.
+
+Improve it by adding:
+
+Proper validation messages
+Disabled submit button when required fields are incomplete
+Loading state while the API request is running
+Error message if the prediction API fails
+Reset Form button after a prediction
+Responsive mobile layout
+
+Do not change the input names or backend request format.
+
+2. Prediction Result Card
+
+After a successful prediction, display a professional result card directly below the form.
+
+Show:
+
+“Estimated Annual Insurance Cost”
+The predicted cost formatted as US currency
+A short message:
+“This estimate was generated using a trained machine learning regression model.”
+The submitted patient information:
+Age
+Sex
+BMI
+Children
+Smoker
+Region
+A “Create Another Prediction” button
+
+Do not invent a confidence percentage or risk score unless the backend already returns those values.
+
+Do not show fake model explanations.
+
+3. About the Model Section
+
+Add a section titled:
+
+About the Machine Learning Model
+
+Explain that the model was developed in Python using the following process:
+
+Setup
+Load Data
+Exploratory Data Analysis
+Data Preprocessing
+Baseline Model
+Model Selection using Cross-Validation
+Hyperparameter Tuning using GridSearchCV
+Retraining with Best Parameters
+Final Evaluation
+Building the Predictive System
+
+Display this workflow as a clean horizontal or vertical step diagram.
+
+Add a card titled Models Evaluated containing:
+
+Linear Regression
+Ridge Regression
+Lasso Regression
+Decision Tree Regressor
+Random Forest Regressor
+XGBoost Regressor
+
+Add a note explaining that the final model was selected based on cross-validation and held-out test performance.
+
+Do not claim a specific final model unless it is already defined in the application or configuration.
+
+4. Model Performance Section
+
+Add a section titled:
+
+Model Performance
+
+Create metric cards for:
+
+Mean Absolute Error
+Root Mean Squared Error
+R² Score
+
+Use clear placeholder values such as:
+
+“Add final MAE”
+“Add final RMSE”
+“Add final R²”
+
+Do not invent numerical values.
+
+Create a model comparison table with these columns:
+
+Model
+MAE
+RMSE
+R²
+Status
+
+Rows:
+
+Linear Regression
+Ridge Regression
+Lasso Regression
+Decision Tree
+Random Forest
+XGBoost
+
+Use placeholder text where actual results are unavailable.
+
+Make the table responsive on mobile.
+
+5. Dataset Section
+
+Add a section titled:
+
+Dataset and EDA Insights
+
+Include dataset feature cards for:
+
+Age
+Sex
+BMI
+Children
+Smoker
+Region
+
+Add a target card:
+
+Target: Medical Insurance Charges
+Problem Type: Regression
+
+Display these EDA insights:
+
+The dataset contains numerical and categorical variables.
+No missing values were detected.
+Insurance charges are strongly right-skewed.
+Smoking status has the strongest relationship with charges.
+Age and BMI show moderate positive relationships with charges.
+No severe multicollinearity was detected among numerical features.
+High-cost outliers were retained because they represent realistic medical cases.
+
+Add another card titled Preprocessing Strategy with:
+
+One-hot encoding for categorical variables
+Feature scaling for linear and regularized models
+Scikit-learn Pipeline and ColumnTransformer
+Log transformation of the target variable
+No aggressive outlier removal
+Held-out test set for final evaluation
+6. Application Architecture Section
+
+Add a compact architecture diagram:
+
+Next.js Frontend
+↓
+FastAPI Backend
+↓
+Input Validation
+↓
+Preprocessing Pipeline
+↓
+Trained Machine Learning Model
+↓
+Prediction Response
+
+Use clean cards and arrows.
+
+7. Footer
+
+Add a footer containing:
+
+“Educational machine learning application”
+“Predictions are estimates and are not official insurance quotations.”
+Technologies used:
+Python
+Scikit-learn
+XGBoost
+FastAPI
+Next.js
+Replit
+Technical requirements
+Preserve all existing prediction API functionality.
+Do not retrain the machine learning model.
+Do not replace or remove the existing backend.
+Do not change the backend request schema.
+Reuse the current design system and teal accent color.
+Use responsive layouts for desktop, tablet, and mobile.
+Use accessible form labels and keyboard-friendly controls.
+Use reusable React components.
+Keep the design professional and uncluttered.
+Do not use fake charts, fake accuracy numbers, fake confidence scores, or invented model metrics.
+Add comments showing where I should insert my real MAE, RMSE, R², and model comparison values.
+Test the full prediction flow after making the UI changes.
+Fix any TypeScript, build, or runtime errors before finishing.
+
+At the end, summarize:
+
+Files changed
+Components added
+Any placeholder values I still need to replace
+How to run and test the application
