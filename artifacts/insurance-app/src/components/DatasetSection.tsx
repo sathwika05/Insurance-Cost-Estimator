@@ -14,14 +14,14 @@ const FEATURES = [
 const EDA_INSIGHTS = [
   'Zero missing values detected across the full 1,338 records.',
   'Target variable (charges) is heavily right-skewed; implies logarithmic transformation utility.',
-  'Smoking status exhibits highest singular correlation with medical charges.',
+  'Smoking status shows the strongest relationship with medical insurance charges.',
   'Age and BMI show moderate positive linear relationships with cost.',
   'No severe multicollinearity found among independent continuous features.',
 ];
 
 const PREPROCESSING = [
   'One-hot encoding applied to nominal categorical predictors.',
-  'StandardScaler normalization fitted on continuous numeric predictors.',
+  'Feature scaling applied to continuous variables where required during model evaluation.',
   'Target log-transformed to stabilize variance and normalize error distribution.',
   'Rigid 80/20 train-test split executed prior to any scaling to prevent leakage.',
   'Scikit-learn Pipeline utilized to bind transformations securely.',
@@ -42,16 +42,16 @@ export function DatasetSection() {
             <DatabaseZap className="h-3.5 w-3.5 text-primary" /> Data Engineering
           </div>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
-            Feature Matrix & Pipeline
+            Dataset Features & Preprocessing
           </h2>
           <p className="max-w-2xl text-base text-slate-600 leading-relaxed">
-            Exploratory insights and deterministic transformations applied to the benchmark Medical Cost Personal Dataset to forge a clean predictive signal.
+            The dataset consists of six input features that undergo preprocessing before being used to train the machine learning model.
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="mb-12">
-          <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 pl-1">Input Vectors</h3>
+          <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 pl-1">Input Features</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {FEATURES.map((f, i) => {
               const Icon = f.icon;
@@ -91,12 +91,12 @@ export function DatasetSection() {
               <Target className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h4 className="text-lg font-bold text-slate-900 mb-1">Target Variable: Annual Medical Charges</h4>
-              <p className="text-sm text-slate-600">Continuous numerical output (USD) modeled via regression analysis.</p>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">Target Variable: Annual Medical Insurance Charges</h4>
+              <p className="text-sm text-slate-600">Continuous numerical target (USD) predicted using supervised regression models.</p>
             </div>
             <div className="md:ml-auto flex shrink-0">
               <div className="px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono uppercase text-primary tracking-wider">
-                Y ∈ ℝ⁺
+                Regression Target
               </div>
             </div>
           </div>
