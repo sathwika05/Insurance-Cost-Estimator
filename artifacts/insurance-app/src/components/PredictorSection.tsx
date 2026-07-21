@@ -104,11 +104,16 @@ export function PredictorSection() {
               {/* Row 1: Age + Sex */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
-                    Age
-                  </label>
+                  <div className="flex items-baseline justify-between">
+                    <label className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                      Age
+                    </label>
+                    <span className="text-[11px] text-slate-400">18 – 100 years</span>
+                  </div>
                   <input
                     type="number"
+                    min={18}
+                    max={100}
                     {...register('age')}
                     placeholder="e.g. 35"
                     className="px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0d9488]/50 focus:border-[#0d9488] transition-shadow placeholder:text-slate-400"
