@@ -86,9 +86,9 @@ export function PredictorSection() {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 flex flex-col md:flex-row gap-8">
-      {/* Left Column: Form (~55%) */}
-      <div className="w-full md:w-[55%] flex flex-col gap-6">
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 flex flex-col md:flex-row gap-8 items-start">
+      {/* Left Column: Form — full width before result, 55% after */}
+      <div className={`flex flex-col gap-6 transition-all duration-500 ${result ? 'w-full md:w-[55%]' : 'w-full max-w-2xl mx-auto'}`}>
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="px-8 pt-8 pb-6 border-b border-slate-100">
             <h2 className="text-xl font-semibold text-slate-900">
@@ -233,101 +233,68 @@ export function PredictorSection() {
         </AnimatePresence>
       </div>
 
-      {/* Right Column: Result Panel (~45%) */}
-      <div className="w-full md:w-[45%]">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-[104px]">
-          {/* Top Border Indicator */}
-          <div className="h-1 w-full bg-[#0d9488]"></div>
+      {/* Right Column: Result Panel — only shown after a prediction */}
+      <AnimatePresence>
+        {result && submittedValues && !apiError && (
+          <motion.div
+            className="w-full md:w-[45%]"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 40 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+          >
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-[104px]">
+              <div className="h-1 w-full bg-[#0d9488]" />
+              <div className="p-8">
+                <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-500">
+                  Estimated Annual Cost
+                </h3>
+                <p className="text-sm text-slate-400 mb-6 mt-1">
+                  Based on your patient profile
+                </p>
 
-          <div className="p-8">
-            <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-500">
-              Estimated Annual Cost
-            </h3>
-            <p className="text-sm text-slate-400 mb-6 mt-1">
-              Based on your patient profile
-            </p>
+                <div className="mb-8">
+                  <span className="text-5xl font-bold tracking-tight text-[#0d9488]">
+                    {formatCurrency(result.estimated_annual_cost)}
+                  </span>
+                  <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500/50" />
+                    Currency: {result.currency}
+                  </div>
+                </div>
 
-            <AnimatePresence mode="wait">
-              {result && submittedValues && !apiError ? (
-                <motion.div
-                  key="result"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col h-full"
+                <div className="rounded-lg bg-slate-50 border border-slate-100 p-5 mb-8">
+                  <h4 className="text-xs uppercase tracking-wide font-semibold text-slate-400 mb-4">
+                    Profile Summary
+                  </h4>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
+                    {[
+                      ['Age', submittedValues.age],
+                      ['Sex', humanise('sex', submittedValues.sex)],
+                      ['BMI', submittedValues.bmi],
+                      ['Children', submittedValues.children],
+                      ['Smoker', humanise('smoker', submittedValues.smoker)],
+                      ['Region', humanise('region', submittedValues.region)],
+                    ].map(([label, value]) => (
+                      <div key={String(label)} className="flex flex-col">
+                        <span className="text-slate-400 text-xs">{label}</span>
+                        <span className="font-medium text-slate-700 mt-0.5">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleReset}
+                  className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-4 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200 text-sm"
                 >
-                  <div className="mb-8">
-                    <span className="text-5xl font-bold tracking-tight text-[#0d9488]">
-                      {formatCurrency(result.estimated_annual_cost)}
-                    </span>
-                    <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-teal-500/50"></span>
-                       Currency: {result.currency}
-                    </div>
-                  </div>
-
-                  {/* Subtle Grid Summary */}
-                  <div className="rounded-lg bg-slate-50 border border-slate-100 p-5 mb-8">
-                    <h4 className="text-xs uppercase tracking-wide font-semibold text-slate-400 mb-4">
-                      Profile Summary
-                    </h4>
-                    <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">Age</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.age}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">Sex</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{humanise('sex', submittedValues.sex)}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">BMI</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.bmi}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">Children</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{submittedValues.children}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">Smoker</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{humanise('smoker', submittedValues.smoker)}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-slate-400 text-xs">Region</span>
-                        <span className="font-medium text-slate-700 mt-0.5">{humanise('region', submittedValues.region)}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleReset}
-                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-4 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200 text-sm"
-                  >
-                    New Prediction
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-12 text-center"
-                >
-                  <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center mb-4">
-                    <span className="text-slate-300 text-2xl font-serif italic">$</span>
-                  </div>
-                  <p className="text-slate-500 font-medium">No prediction generated</p>
-                  <p className="text-sm text-slate-400 mt-1 max-w-[200px]">
-                    Enter patient details and click Calculate Cost to see the estimate here.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
+                  New Prediction
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
