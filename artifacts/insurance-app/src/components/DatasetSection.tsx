@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Target, Hash, BarChart3, DatabaseZap } from 'lucide-react';
+import { Target, Hash, BarChart3, DatabaseZap, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const FEATURES = [
@@ -106,13 +106,13 @@ export function DatasetSection() {
         <div className="grid md:grid-cols-2 gap-8">
           <Card className="bg-white border-border shadow-lg">
             <CardContent className="p-8">
-              <h3 className="text-sm font-mono uppercase tracking-widest text-slate-900 mb-6 border-b border-slate-100 pb-4">
+              <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 border-b border-slate-100 pb-4">
                 Exploratory Findings
               </h3>
               <ul className="space-y-4">
                 {EDA_INSIGHTS.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <span className="text-primary mt-1 shrink-0 text-base">■</span>
+                    <span className="mt-1.5 shrink-0 w-2.5 h-2.5 rounded-sm bg-primary" />
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -123,13 +123,13 @@ export function DatasetSection() {
           <Card className="bg-white border-border shadow-lg relative overflow-hidden">
             <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-transparent" />
             <CardContent className="p-8">
-              <h3 className="text-sm font-mono uppercase tracking-widest text-slate-900 mb-6 border-b border-slate-100 pb-4">
+              <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 border-b border-slate-100 pb-4">
                 Transformation Strategy
               </h3>
               <ul className="space-y-4">
                 {PREPROCESSING.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <span className="text-primary mt-1 shrink-0 text-base">▹</span>
+                    <ChevronRight className="mt-0.5 shrink-0 h-4 w-4 text-primary" />
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
