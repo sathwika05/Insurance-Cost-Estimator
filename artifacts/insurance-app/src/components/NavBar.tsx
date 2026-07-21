@@ -30,8 +30,7 @@ export function NavBar({ active, onNav }: NavBarProps) {
       <aside className="hidden md:flex fixed inset-y-0 left-0 z-40 w-64 flex-col border-r border-sidebar-border bg-sidebar shadow-2xl">
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-6 border-b border-sidebar-border/50 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-50" />
-          <span className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+          <span className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
             <Hexagon className="h-5 w-5 text-primary" />
           </span>
           <div className="relative min-w-0">
@@ -59,7 +58,7 @@ export function NavBar({ active, onNav }: NavBarProps) {
                 {isActive && (
                   <motion.div
                     layoutId="active-nav"
-                    className="absolute inset-0 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgba(20,184,166,0.1)]"
+                    className="absolute inset-0 rounded-xl bg-primary/10 border border-primary/20"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.2 }}
@@ -80,8 +79,8 @@ export function NavBar({ active, onNav }: NavBarProps) {
         </nav>
 
         {/* Sidebar footer */}
-        <div className="border-t border-sidebar-border/50 px-6 py-5 bg-black/20">
-          <p className="text-[10px] font-mono text-muted-foreground/60 leading-relaxed uppercase tracking-wider">
+        <div className="border-t border-sidebar-border/50 px-6 py-5 bg-slate-50">
+          <p className="text-[10px] font-mono text-muted-foreground leading-relaxed uppercase tracking-wider">
             ISEM 503 Project<br />v1.0.0
           </p>
         </div>
@@ -122,7 +121,7 @@ export function NavBar({ active, onNav }: NavBarProps) {
                   onClick={() => handleNav(id)}
                   className={`group relative w-full flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
                     isActive
-                      ? 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(20,184,166,0.1)]'
+                      ? 'bg-primary/10 text-primary border border-primary/20'
                       : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                   }`}
                 >

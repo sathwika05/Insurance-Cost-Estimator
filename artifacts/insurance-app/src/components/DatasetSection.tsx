@@ -3,12 +3,12 @@ import { Target, Hash, BarChart3, DatabaseZap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const FEATURES = [
-  { name: 'Age', type: 'Numerical', desc: 'Beneficiary age (18–64)', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
-  { name: 'Sex', type: 'Categorical', desc: 'Biological sex', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
-  { name: 'BMI', type: 'Numerical', desc: 'Body mass index ratio', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
-  { name: 'Children', type: 'Numerical', desc: 'Number of dependents', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
-  { name: 'Smoker', type: 'Categorical', desc: 'Tobacco smoking status', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
-  { name: 'Region', type: 'Categorical', desc: 'US geographic region', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
+  { name: 'Age', type: 'Numerical', desc: 'Beneficiary age (18–64)', icon: Hash, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+  { name: 'Sex', type: 'Categorical', desc: 'Biological sex', icon: BarChart3, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
+  { name: 'BMI', type: 'Numerical', desc: 'Body mass index ratio', icon: Hash, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+  { name: 'Children', type: 'Numerical', desc: 'Number of dependents', icon: Hash, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+  { name: 'Smoker', type: 'Categorical', desc: 'Tobacco smoking status', icon: BarChart3, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
+  { name: 'Region', type: 'Categorical', desc: 'US geographic region', icon: BarChart3, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
 ];
 
 const EDA_INSIGHTS = [
@@ -38,20 +38,20 @@ export function DatasetSection() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-white/10 text-muted-foreground text-xs font-mono uppercase tracking-widest mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs font-mono uppercase tracking-widest mb-6">
             <DatabaseZap className="h-3.5 w-3.5 text-primary" /> Data Engineering
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
             Feature Matrix & Pipeline
           </h2>
-          <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
+          <p className="max-w-2xl text-base text-slate-600 leading-relaxed">
             Exploratory insights and deterministic transformations applied to the benchmark Medical Cost Personal Dataset to forge a clean predictive signal.
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="mb-12">
-          <h3 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6 pl-1">Input Vectors</h3>
+          <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-6 pl-1">Input Vectors</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {FEATURES.map((f, i) => {
               const Icon = f.icon;
@@ -62,14 +62,14 @@ export function DatasetSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + (i * 0.05) }}
                 >
-                  <Card className={`bg-card/50 border ${f.border} shadow-sm h-full`}>
+                  <Card className={`bg-white border ${f.border} shadow-sm h-full`}>
                     <CardContent className="p-4 flex flex-col items-center text-center">
                       <div className={`p-2 rounded-lg mb-3 ${f.bg} ${f.color}`}>
                         <Icon className="h-4 w-4" />
                       </div>
-                      <p className="text-sm font-semibold text-foreground">{f.name}</p>
-                      <p className="text-[10px] font-mono mt-1 mb-2 text-muted-foreground uppercase">{f.type}</p>
-                      <p className="text-xs text-muted-foreground/70 leading-tight">{f.desc}</p>
+                      <p className="text-sm font-semibold text-slate-900">{f.name}</p>
+                      <p className={`text-[10px] font-mono font-semibold mt-1 mb-2 uppercase ${f.color}`}>{f.type}</p>
+                      <p className="text-xs text-slate-500 leading-tight">{f.desc}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -85,17 +85,17 @@ export function DatasetSection() {
           transition={{ delay: 0.4 }}
           className="mb-12"
         >
-          <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/10 via-card to-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(20,184,166,0.05)]">
-            <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full blur-[60px] pointer-events-none" />
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/20 border border-primary/30 shadow-inner">
+          <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/5 via-white to-white p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm">
+            <div className="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] pointer-events-none" />
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
               <Target className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h4 className="text-lg font-bold text-foreground mb-1">Target Variable: Annual Medical Charges</h4>
-              <p className="text-sm text-muted-foreground">Continuous numerical output (USD) modeled via regression analysis.</p>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">Target Variable: Annual Medical Charges</h4>
+              <p className="text-sm text-slate-600">Continuous numerical output (USD) modeled via regression analysis.</p>
             </div>
             <div className="md:ml-auto flex shrink-0">
-              <div className="px-4 py-2 rounded-lg bg-black/40 border border-white/5 text-xs font-mono uppercase text-primary/90 tracking-wider">
+              <div className="px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono uppercase text-primary tracking-wider">
                 Y ∈ ℝ⁺
               </div>
             </div>
@@ -104,14 +104,14 @@ export function DatasetSection() {
 
         {/* Split Info */}
         <div className="grid md:grid-cols-2 gap-8">
-          <Card className="bg-card border-white/5 shadow-xl">
+          <Card className="bg-white border-border shadow-lg">
             <CardContent className="p-8">
-              <h3 className="text-sm font-mono uppercase tracking-widest text-foreground mb-6 border-b border-white/10 pb-4">
+              <h3 className="text-sm font-mono uppercase tracking-widest text-slate-900 mb-6 border-b border-slate-100 pb-4">
                 Exploratory Findings
               </h3>
               <ul className="space-y-4">
                 {EDA_INSIGHTS.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground/90">
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
                     <span className="text-primary mt-0.5 opacity-70">■</span>
                     <span className="leading-relaxed">{item}</span>
                   </li>
@@ -120,15 +120,15 @@ export function DatasetSection() {
             </CardContent>
           </Card>
           
-          <Card className="bg-card border-white/5 shadow-xl relative overflow-hidden">
+          <Card className="bg-white border-border shadow-lg relative overflow-hidden">
             <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-transparent" />
             <CardContent className="p-8">
-              <h3 className="text-sm font-mono uppercase tracking-widest text-foreground mb-6 border-b border-white/10 pb-4">
+              <h3 className="text-sm font-mono uppercase tracking-widest text-slate-900 mb-6 border-b border-slate-100 pb-4">
                 Transformation Strategy
               </h3>
               <ul className="space-y-4">
                 {PREPROCESSING.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground/90">
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
                     <span className="text-primary mt-0.5 opacity-70">▹</span>
                     <span className="leading-relaxed">{item}</span>
                   </li>

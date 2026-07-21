@@ -37,13 +37,13 @@ export function AboutModelSection() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono uppercase tracking-widest mb-6 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono uppercase tracking-widest mb-6">
             <Network className="h-3.5 w-3.5" /> Research Methodology
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-6">
             Development Pipeline
           </h2>
-          <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
+          <p className="max-w-2xl text-lg text-slate-600 leading-relaxed">
             The architecture follows a rigorous machine learning lifecycle, transitioning from raw data ingestion to a production-ready inference API.
           </p>
         </div>
@@ -52,19 +52,19 @@ export function AboutModelSection() {
           {/* Models Evaluated (Left Col) */}
           <div className="lg:col-span-5 space-y-8">
             <div className="sticky top-24 space-y-8">
-              <Card className="bg-card border-white/10 shadow-2xl overflow-hidden">
+              <Card className="bg-white border-border shadow-lg overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-                <CardHeader className="pb-6 border-b border-white/5 relative z-10">
-                  <CardTitle className="text-base font-semibold tracking-wide flex items-center gap-2">
+                <CardHeader className="pb-6 border-b border-border relative z-10">
+                  <CardTitle className="text-base font-semibold tracking-wide flex items-center gap-2 text-slate-900">
                     Candidate Architectures
                   </CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">Cross-validated relative performance (MAE proxy)</p>
+                  <p className="text-xs text-slate-500 mt-1">Cross-validated relative performance (MAE proxy)</p>
                 </CardHeader>
                 <CardContent className="pt-6 relative z-10 space-y-5">
                   {MODELS.map((model, idx) => (
                     <div key={model.name} className="relative group">
                       <div className="flex justify-between items-end mb-2">
-                        <span className={`text-sm font-medium ${model.winner ? 'text-primary' : 'text-foreground/80'}`}>
+                        <span className={`text-sm font-medium ${model.winner ? 'text-primary' : 'text-slate-700'}`}>
                           {model.name}
                         </span>
                         {model.winner && (
@@ -73,9 +73,9 @@ export function AboutModelSection() {
                           </span>
                         )}
                       </div>
-                      <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden flex">
+                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden flex">
                         <motion.div 
-                          className={`h-full rounded-full ${model.winner ? 'bg-primary shadow-[0_0_10px_rgba(20,184,166,0.8)]' : 'bg-muted-foreground/30'}`}
+                          className={`h-full rounded-full ${model.winner ? 'bg-primary' : 'bg-slate-300'}`}
                           initial={{ width: 0 }}
                           animate={{ width: `${model.score}%` }}
                           transition={{ duration: 1, delay: 0.2 + (idx * 0.1), ease: "easeOut" }}
@@ -86,20 +86,20 @@ export function AboutModelSection() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-black/20 border-white/5 shadow-none">
+              <Card className="bg-slate-50 border-border shadow-none">
                 <CardContent className="p-6">
-                  <h4 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">Selection Criteria</h4>
-                  <div className="space-y-4 text-sm text-muted-foreground/80">
+                  <h4 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-4">Selection Criteria</h4>
+                  <div className="space-y-4 text-sm text-slate-600">
                     <p>
-                      Candidate models underwent <strong className="text-foreground/90 font-medium">5-fold cross-validation</strong> to establish stable baseline metrics.
+                      Candidate models underwent <strong className="text-slate-900 font-medium">5-fold cross-validation</strong> to establish stable baseline metrics.
                     </p>
                     <p>
-                      The Random Forest regressor demonstrated superior generalisation capability and was subsequently optimized via <strong className="text-foreground/90 font-medium">GridSearchCV</strong> over a constrained hyperparameter space.
+                      The Random Forest regressor demonstrated superior generalisation capability and was subsequently optimized via <strong className="text-slate-900 font-medium">GridSearchCV</strong> over a constrained hyperparameter space.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2 pt-6 border-t border-white/5 mt-6">
+                  <div className="flex flex-wrap gap-2 pt-6 border-t border-border mt-6">
                     {['Cross-Validation', 'GridSearchCV', 'Held-out Test'].map((tag) => (
-                      <Badge key={tag} variant="outline" className="bg-card/50 border-white/10 text-xs font-mono text-muted-foreground/70">{tag}</Badge>
+                      <Badge key={tag} variant="outline" className="bg-white border-slate-200 text-xs font-mono text-slate-500">{tag}</Badge>
                     ))}
                   </div>
                 </CardContent>
@@ -109,10 +109,10 @@ export function AboutModelSection() {
 
           {/* Workflow Timeline (Right Col) */}
           <div className="lg:col-span-7">
-            <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-8 pl-4">Execution Sequence</h3>
+            <h3 className="text-sm font-mono uppercase tracking-widest text-slate-500 mb-8 pl-4">Execution Sequence</h3>
             <div className="relative pl-6 md:pl-8 space-y-10">
-              {/* Glowing timeline spine */}
-              <div className="absolute left-[11px] md:left-[15px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
+              {/* Connector line */}
+              <div className="absolute left-[11px] md:left-[15px] top-4 bottom-4 w-px bg-slate-200" />
               
               {WORKFLOW_STEPS.map((step, i) => (
                 <motion.div 
@@ -125,23 +125,27 @@ export function AboutModelSection() {
                 >
                   {/* Step node */}
                   <div className="absolute -left-6 md:-left-8 top-1 flex h-6 w-6 items-center justify-center">
-                    <div className={`absolute inset-0 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary/30 animate-pulse' : 'bg-background'} transition-colors duration-300 group-hover:bg-primary/20`} />
-                    <div className={`relative h-2 w-2 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary shadow-[0_0_10px_rgba(20,184,166,1)]' : 'bg-muted-foreground/40 group-hover:bg-primary/80'} ring-4 ring-background transition-all duration-300`} />
+                    <div className={`absolute inset-0 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary/20 animate-pulse' : 'bg-white border border-primary'} transition-colors duration-300`} />
+                    <div className={`relative h-2 w-2 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary' : 'bg-primary/50'} transition-all duration-300`} />
                   </div>
                   
                   {/* Step content */}
                   <div className="pl-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-[10px] font-mono text-primary/70 tracking-widest bg-primary/10 px-2 py-0.5 rounded">
-                        PHASE {step.num.toString().padStart(2, '0')}
-                      </span>
-                      <h4 className="text-base font-semibold text-foreground/90 group-hover:text-primary transition-colors">
-                        {step.title}
-                      </h4>
-                    </div>
-                    <p className="text-sm text-muted-foreground/80 leading-relaxed border-l-2 border-white/5 pl-4 py-1 mt-3 group-hover:border-primary/30 transition-colors">
-                      {step.desc}
-                    </p>
+                    <Card className="bg-white border-border shadow-sm group-hover:shadow-md transition-shadow">
+                      <CardContent className="p-4 md:p-5">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="text-[10px] font-mono text-primary font-bold tracking-widest bg-primary/10 px-2 py-0.5 rounded">
+                            PHASE {step.num.toString().padStart(2, '0')}
+                          </span>
+                          <h4 className="text-base font-semibold text-slate-900 group-hover:text-primary transition-colors">
+                            {step.title}
+                          </h4>
+                        </div>
+                        <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                          {step.desc}
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
                 </motion.div>
               ))}

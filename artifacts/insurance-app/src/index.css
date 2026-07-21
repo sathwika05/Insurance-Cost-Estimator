@@ -4,8 +4,6 @@
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -72,47 +70,47 @@
   --app-font-mono: 'Space Mono', 'Courier New', monospace;
   --radius: 0.5rem;
 
-  /* Bloomberg terminal meets modern health tech - Deep Slate/Navy Base */
-  --background: 222 47% 6%;
-  --foreground: 210 20% 98%;
+  /* Premium Healthcare SaaS Light Theme */
+  --background: 210 40% 98%; /* slate-50 #f8fafc */
+  --foreground: 222 47% 11%; /* slate-900 #0f172a */
 
-  --border: 222 30% 15%;
-  --input: 222 30% 20%;
-  --ring: 174 55% 45%;
+  --border: 214 32% 91%; /* slate-200 */
+  --input: 214 32% 91%; /* slate-200 */
+  --ring: 174 55% 42%;
 
-  --card: 222 47% 9%;
-  --card-foreground: 210 20% 98%;
-  --card-border: 222 30% 15%;
+  --card: 0 0% 100%; /* white */
+  --card-foreground: 222 47% 11%;
+  --card-border: 214 32% 91%;
 
-  --sidebar: 224 50% 5%;
-  --sidebar-foreground: 210 20% 98%;
-  --sidebar-border: 222 30% 12%;
-  --sidebar-primary: 174 55% 45%;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 215 16% 47%; /* slate-500 */
+  --sidebar-border: 214 32% 91%;
+  --sidebar-primary: 174 55% 42%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 174 35% 20%;
-  --sidebar-accent-foreground: 174 55% 75%;
-  --sidebar-ring: 174 55% 45%;
+  --sidebar-accent: 174 55% 95%; /* teal-50 */
+  --sidebar-accent-foreground: 174 55% 42%;
+  --sidebar-ring: 174 55% 42%;
 
-  --popover: 222 47% 9%;
-  --popover-foreground: 210 20% 98%;
-  --popover-border: 222 30% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214 32% 91%;
 
-  --primary: 174 55% 45%; /* Teal */
-  --primary-foreground: 222 47% 6%;
+  --primary: 174 55% 42%; /* Primary teal */
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 222 30% 15%;
-  --secondary-foreground: 210 20% 98%;
+  --secondary: 210 40% 96%; /* slate-100 */
+  --secondary-foreground: 222 47% 11%;
 
-  --muted: 222 30% 13%;
-  --muted-foreground: 215 15% 65%;
+  --muted: 210 40% 96%; /* slate-100 */
+  --muted-foreground: 215 16% 47%; /* slate-500 */
 
-  --accent: 142 52% 48%; /* Green */
-  --accent-foreground: 222 47% 6%;
+  --accent: 174 55% 95%; /* teal-50 */
+  --accent-foreground: 174 55% 42%; /* teal primary */
 
-  --destructive: 0 68% 52%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --chart-1: 174 55% 45%;
+  --chart-1: 174 55% 42%;
   --chart-2: 210 80% 60%;
   --chart-3: 142 52% 48%;
   --chart-4: 280 65% 60%;
@@ -124,6 +122,6 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground;
+    @apply font-sans antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary;
   }
 }

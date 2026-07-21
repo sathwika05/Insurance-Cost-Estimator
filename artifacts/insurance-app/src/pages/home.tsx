@@ -19,7 +19,7 @@ export default function Home() {
   const [active, setActive] = useState<TabId>('predictor');
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-background text-foreground dark">
+    <div className="flex h-dvh overflow-hidden bg-background text-foreground">
       {/* Sidebar / mobile top bar */}
       <NavBar active={active} onNav={setActive} />
 

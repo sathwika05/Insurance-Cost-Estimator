@@ -130,19 +130,17 @@ export function PredictorSection() {
       transition={{ duration: 0.4 }}
     >
       {/* ── Hero Band ── */}
-      <div className="relative overflow-hidden bg-card border-b border-border mb-10 pt-16 pb-12 shadow-sm">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-card z-0" />
-        {/* Abstract background elements */}
+      <div className="relative overflow-hidden bg-white border-b border-border mb-10 pt-16 pb-12 shadow-sm border-t-4 border-t-primary">
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[400px] h-[400px] bg-blue-50 rounded-full blur-[80px] pointer-events-none" />
         
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+              <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20">
                 <ActivitySquare className="h-5 w-5" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
                 Inference <span className="text-primary font-light">Engine</span>
               </h1>
             </div>
@@ -152,23 +150,23 @@ export function PredictorSection() {
             </p>
           </div>
           
-          <div className="flex items-center self-start md:self-auto bg-black/40 border border-white/5 rounded-full px-4 py-2 backdrop-blur-md">
+          <div className="flex items-center self-start md:self-auto bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
             {isHealthLoading ? (
               <div className="flex items-center gap-2">
-                <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
-                <span className="text-xs font-mono text-muted-foreground">CONNECTING...</span>
+                <Loader2 className="h-3 w-3 animate-spin text-primary/70" />
+                <span className="text-xs font-mono text-primary/70">CONNECTING...</span>
               </div>
             ) : health?.status === 'ok' ? (
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary shadow-[0_0_8px_rgba(20,184,166,0.8)]"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
                 </span>
                 <span className="text-xs font-mono font-medium tracking-widest text-primary uppercase">Model Ready</span>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <div className="h-2.5 w-2.5 rounded-full bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                <div className="h-2.5 w-2.5 rounded-full bg-destructive" />
                 <span className="text-xs font-mono font-medium tracking-widest text-destructive uppercase">Offline</span>
               </div>
             )}
@@ -190,13 +188,13 @@ export function PredictorSection() {
                   exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Card className="shadow-2xl border-white/10 bg-card/80 backdrop-blur-xl">
-                    <CardHeader className="border-b border-white/5 pb-6">
-                      <CardTitle className="text-xl font-bold flex items-center gap-2">
+                  <Card className="shadow-lg border-border bg-white">
+                    <CardHeader className="border-b border-border pb-6">
+                      <CardTitle className="text-xl font-bold flex items-center gap-2 text-slate-900">
                         <TrendingUp className="h-5 w-5 text-primary" />
                         Patient Parameters
                       </CardTitle>
-                      <CardDescription className="text-xs uppercase tracking-widest font-mono text-muted-foreground/70">
+                      <CardDescription className="text-xs uppercase tracking-widest font-mono text-slate-500">
                         Input feature vector for model evaluation
                       </CardDescription>
                     </CardHeader>
@@ -213,7 +211,7 @@ export function PredictorSection() {
                                   <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Age</FormLabel>
                                   <FormControl>
                                     <Input
-                                      className="bg-black/20 border-white/10 focus-visible:ring-primary h-11"
+                                      className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11"
                                       type="number"
                                       placeholder="e.g. 35"
                                       min={18}
@@ -236,7 +234,7 @@ export function PredictorSection() {
                                   <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Biological Sex</FormLabel>
                                   <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
-                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
                                         <SelectValue placeholder="Select..." />
                                       </SelectTrigger>
                                     </FormControl>
@@ -259,7 +257,7 @@ export function PredictorSection() {
                                   <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">BMI Value</FormLabel>
                                   <FormControl>
                                     <Input
-                                      className="bg-black/20 border-white/10 focus-visible:ring-primary h-11"
+                                      className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11"
                                       type="number"
                                       placeholder="e.g. 24.5"
                                       step="0.1"
@@ -286,7 +284,7 @@ export function PredictorSection() {
                                     value={String(field.value ?? 0)}
                                   >
                                     <FormControl>
-                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
                                         <SelectValue placeholder="Select..." />
                                       </SelectTrigger>
                                     </FormControl>
@@ -312,7 +310,7 @@ export function PredictorSection() {
                                   <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Tobacco Use</FormLabel>
                                   <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
-                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
                                         <SelectValue placeholder="Select..." />
                                       </SelectTrigger>
                                     </FormControl>
@@ -335,7 +333,7 @@ export function PredictorSection() {
                                   <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">US Region</FormLabel>
                                   <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
-                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                      <SelectTrigger className="bg-slate-50 border-slate-200 text-slate-900 focus-visible:ring-primary h-11">
                                         <SelectValue placeholder="Select..." />
                                       </SelectTrigger>
                                     </FormControl>
@@ -352,11 +350,11 @@ export function PredictorSection() {
                             />
                           </div>
 
-                          <div className="flex gap-4 pt-4 border-t border-white/5">
+                          <div className="flex gap-4 pt-4 border-t border-border">
                             <Button
                               type="submit"
                               disabled={predictMutation.isPending}
-                              className="h-12 px-8 flex-1 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(20,184,166,0.5)] transition-all font-bold text-sm tracking-wide"
+                              className="h-12 px-8 flex-1 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all font-bold text-sm tracking-wide"
                             >
                               {predictMutation.isPending ? (
                                 <motion.div
@@ -378,7 +376,7 @@ export function PredictorSection() {
                                 type="button"
                                 variant="outline"
                                 onClick={handleReset}
-                                className="h-12 border-white/10 hover:bg-white/5"
+                                className="h-12 border-slate-200 text-slate-700 hover:bg-slate-50"
                               >
                                 <RefreshCw className="mr-2 h-4 w-4" />
                                 Reset
@@ -418,14 +416,14 @@ export function PredictorSection() {
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   className="space-y-6"
                 >
-                  <Card className="relative overflow-hidden border-primary/30 shadow-[0_0_50px_rgba(20,184,166,0.15)] bg-card/90 backdrop-blur-xl">
-                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px]" />
-                    <CardHeader className="border-b border-primary/10 pb-4 relative z-10 flex flex-row items-center justify-between">
+                  <Card className="relative overflow-hidden border border-border border-t-4 border-t-primary shadow-lg bg-white">
+                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[80px]" />
+                    <CardHeader className="border-b border-slate-100 pb-4 relative z-10 flex flex-row items-center justify-between">
                       <div>
-                        <CardTitle className="text-xs uppercase tracking-widest text-primary/80 font-mono">
+                        <CardTitle className="text-xs uppercase tracking-widest text-primary font-mono">
                           Model Output
                         </CardTitle>
-                        <p className="text-sm text-foreground font-semibold mt-1">Estimated Annual Charge</p>
+                        <p className="text-sm text-slate-700 font-semibold mt-1">Estimated Annual Charge</p>
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
                         <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
@@ -438,12 +436,12 @@ export function PredictorSection() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
                       >
-                        <h2 className="text-6xl md:text-7xl font-bold font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-primary/90 to-primary/50 drop-shadow-sm">
+                        <h2 className="text-6xl md:text-7xl font-bold font-mono tracking-tighter text-teal-800 drop-shadow-sm">
                           {formatCurrency(result.estimated_annual_cost)}
                         </h2>
-                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/30 border border-white/5">
+                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-50 border border-slate-200">
                           <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
-                          <p className="text-xs font-mono text-muted-foreground/80 tracking-wider">
+                          <p className="text-xs font-mono text-slate-500 tracking-wider">
                             BASE CURRENCY: {result.currency}
                           </p>
                         </div>
@@ -451,9 +449,9 @@ export function PredictorSection() {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-white/10 bg-black/20 backdrop-blur-md">
-                    <CardHeader className="pb-4 border-b border-white/5">
-                      <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+                  <Card className="border border-primary/20 bg-primary/5">
+                    <CardHeader className="pb-4 border-b border-primary/10">
+                      <CardTitle className="text-xs font-mono uppercase tracking-widest text-primary/80">
                         Feature Vector Used
                       </CardTitle>
                     </CardHeader>
@@ -474,12 +472,12 @@ export function PredictorSection() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 + (i * 0.05) }}
-                            className="bg-card/50 p-4 rounded-xl border border-white/5"
+                            className="bg-white p-4 rounded-xl border border-primary/10 shadow-sm"
                           >
-                            <dt className="text-[10px] uppercase font-mono tracking-widest text-muted-foreground/60 mb-1">{label}</dt>
-                            <dd className="text-sm font-semibold text-foreground flex items-baseline gap-1">
+                            <dt className="text-[10px] uppercase font-mono tracking-widest text-slate-500 mb-1">{label}</dt>
+                            <dd className="text-sm font-semibold text-slate-900 flex items-baseline gap-1">
                               {value}
-                              {unit && <span className="text-[10px] text-muted-foreground font-mono">{unit}</span>}
+                              {unit && <span className="text-[10px] text-slate-400 font-mono">{unit}</span>}
                             </dd>
                           </motion.div>
                         ))}
@@ -489,7 +487,7 @@ export function PredictorSection() {
                         <Button
                           onClick={handleReset}
                           variant="outline"
-                          className="h-11 px-8 rounded-full border-white/10 bg-transparent hover:bg-white/5 hover:text-primary transition-colors text-xs font-semibold tracking-wide uppercase"
+                          className="h-11 px-8 rounded-full border-primary/20 bg-white hover:bg-primary/5 hover:text-primary transition-colors text-xs font-semibold tracking-wide uppercase text-slate-700"
                         >
                           <PlusCircle className="mr-2 h-4 w-4" />
                           New Evaluation
