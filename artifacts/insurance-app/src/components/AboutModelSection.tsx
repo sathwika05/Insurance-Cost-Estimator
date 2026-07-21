@@ -16,12 +16,12 @@ const WORKFLOW_STEPS = [
 ];
 
 const MODELS = [
-  'Linear Regression',
-  'Ridge Regression',
-  'Lasso Regression',
-  'Decision Tree Regressor',
-  'Random Forest Regressor',
-  'XGBoost Regressor',
+  { name: 'Linear Regression',        winner: false },
+  { name: 'Ridge Regression',         winner: false },
+  { name: 'Lasso Regression',         winner: false },
+  { name: 'Decision Tree Regressor',  winner: false },
+  { name: 'XGBoost Regressor',        winner: false },
+  { name: 'Random Forest Regressor',  winner: true  },
 ];
 
 export function AboutModelSection() {
@@ -81,9 +81,18 @@ export function AboutModelSection() {
             </CardHeader>
             <CardContent className="space-y-2">
               {MODELS.map((model) => (
-                <div key={model} className="flex items-center gap-2.5">
-                  <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-primary" />
-                  <span className="text-sm text-foreground">{model}</span>
+                <div key={model.name} className="flex items-center gap-2.5">
+                  <CheckCircle2
+                    className={`h-4 w-4 flex-shrink-0 ${model.winner ? 'text-accent' : 'text-primary'}`}
+                  />
+                  <span className={`text-sm ${model.winner ? 'font-semibold text-foreground' : 'text-foreground'}`}>
+                    {model.name}
+                  </span>
+                  {model.winner && (
+                    <span className="ml-auto rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+                      Selected
+                    </span>
+                  )}
                 </div>
               ))}
             </CardContent>

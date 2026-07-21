@@ -29,7 +29,7 @@ const FLOW = [
   {
     icon: Brain,
     label: 'Trained Machine Learning Model',
-    sublabel: 'XGBoost regressor — loaded via joblib at startup',
+    sublabel: 'Tuned Random Forest — loaded via joblib at startup',
     color: 'bg-primary/5 text-primary border-primary/20',
   },
   {

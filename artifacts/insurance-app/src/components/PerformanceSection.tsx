@@ -1,27 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-// ── TODO: Replace placeholder values below with your actual model metrics ─────
-// After running your final evaluation (notebook Step 9), paste the real numbers here.
-
 interface MetricCardProps {
   label: string;
-  value: string;       // TODO: replace with your actual value, e.g. "2341.50"
+  value: string;
   description: string;
   note?: string;
 }
 
 function MetricCard({ label, value, description, note }: MetricCardProps) {
-  const isPlaceholder = value.startsWith('Add ');
   return (
     <Card className="shadow-sm text-center">
       <CardContent className="pt-6 pb-5 px-6">
         <p className="mb-2 text-sm font-medium text-muted-foreground">{label}</p>
-        <p
-          className={`text-3xl font-bold font-mono tracking-tight ${
-            isPlaceholder ? 'text-muted-foreground/50 text-xl' : 'text-primary'
-          }`}
-        >
+        <p className="text-3xl font-bold font-mono tracking-tight text-primary">
           {value}
         </p>
         <p className="mt-2 text-xs text-muted-foreground">{description}</p>
@@ -31,55 +23,49 @@ function MetricCard({ label, value, description, note }: MetricCardProps) {
   );
 }
 
-// ── TODO: Replace placeholder cells in MODELS_TABLE with your CV & test results
+// CV results from model selection (5-fold cross-validation on training set)
 const MODELS_TABLE = [
   {
     name: 'Linear Regression',
-    mae: '— Add MAE',    // TODO
-    rmse: '— Add RMSE',  // TODO
-    r2: '— Add R²',      // TODO
+    mae: '4,221.96',
+    rmse: '6,123.65',
+    r2: '0.723',
     status: 'Baseline',
-    statusVariant: 'secondary' as const,
   },
   {
     name: 'Ridge Regression',
-    mae: '— Add MAE',
-    rmse: '— Add RMSE',
-    r2: '— Add R²',
+    mae: '4,226.80',
+    rmse: '6,123.65',
+    r2: '0.723',
     status: 'Evaluated',
-    statusVariant: 'secondary' as const,
   },
   {
     name: 'Lasso Regression',
-    mae: '— Add MAE',
-    rmse: '— Add RMSE',
-    r2: '— Add R²',
+    mae: '4,222.00',
+    rmse: '6,123.43',
+    r2: '0.723',
     status: 'Evaluated',
-    statusVariant: 'secondary' as const,
   },
   {
     name: 'Decision Tree',
-    mae: '— Add MAE',
-    rmse: '— Add RMSE',
-    r2: '— Add R²',
+    mae: '3,284.18',
+    rmse: '6,777.52',
+    r2: '0.659',
     status: 'Evaluated',
-    statusVariant: 'secondary' as const,
   },
   {
     name: 'Random Forest',
-    mae: '— Add MAE',
-    rmse: '— Add RMSE',
-    r2: '— Add R²',
-    status: 'Evaluated',
-    statusVariant: 'secondary' as const,
+    mae: '2,742.90',
+    rmse: '4,894.45',
+    r2: '0.821',
+    status: 'Final Model',
   },
   {
     name: 'XGBoost',
-    mae: '— Add MAE',    // TODO: This is your final model — paste the tuned test MAE here
-    rmse: '— Add RMSE',  // TODO: paste the tuned test RMSE here
-    r2: '— Add R²',      // TODO: paste the tuned test R² here
-    status: 'Final Model',
-    statusVariant: 'default' as const,
+    mae: '3,104.85',
+    rmse: '5,375.65',
+    r2: '0.785',
+    status: 'Evaluated',
   },
 ];
 
@@ -99,8 +85,8 @@ export function PerformanceSection() {
             Model Performance
           </h2>
           <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-            Metrics are evaluated on a held-out test set the model never saw during training or tuning.
-            Replace the placeholder values below with your actual results.
+            Final metrics for the tuned Random Forest model on the held-out test set —
+            data the model never saw during training or hyperparameter tuning.
           </p>
         </div>
 
@@ -108,19 +94,19 @@ export function PerformanceSection() {
         <div className="mb-10 grid gap-4 sm:grid-cols-3">
           <MetricCard
             label="Mean Absolute Error (MAE)"
-            value="Add final MAE"  // TODO: e.g. "$2,341.50"
+            value="$1,960.70"
             description="Average absolute difference between predicted and actual charges"
             note="Lower is better"
           />
           <MetricCard
             label="Root Mean Squared Error (RMSE)"
-            value="Add final RMSE"  // TODO: e.g. "$4,218.70"
+            value="$4,283.83"
             description="Square root of the average squared prediction errors"
             note="Lower is better — penalises large errors more"
           />
           <MetricCard
             label="R² Score"
-            value="Add final R²"  // TODO: e.g. "0.89"
+            value="0.900"
             description="Proportion of variance in charges explained by the model"
             note="Closer to 1.0 is better"
           />
@@ -131,7 +117,8 @@ export function PerformanceSection() {
           <CardHeader className="border-b border-border pb-4">
             <CardTitle className="text-base">Model Comparison</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              Cross-validation results for all candidate models evaluated during model selection.
+              5-fold cross-validation results on the training set. Random Forest had the best CV MAE
+              and was selected for hyperparameter tuning.
             </p>
           </CardHeader>
           <CardContent className="p-0">
@@ -176,8 +163,7 @@ export function PerformanceSection() {
         </Card>
 
         <p className="mt-4 text-center text-xs text-muted-foreground italic">
-          {/* TODO: Replace placeholder metric cells above with values from your notebook's final evaluation step. */}
-          Placeholder values shown — add real metrics from your notebook's final evaluation step.
+          CV MAE shown for all models. Final model (tuned Random Forest) achieved test MAE $1,960.70 and R² 0.900.
         </p>
       </div>
     </section>
