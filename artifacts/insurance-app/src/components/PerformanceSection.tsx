@@ -26,12 +26,12 @@ const CHART_DATA = [
 ];
 
 const MODELS_TABLE = [
-  { name: 'Linear Regression', mae: '4,221.96', rmse: '6,123.65', r2: '0.723', status: 'Baseline' },
-  { name: 'Ridge Regression',  mae: '4,226.80', rmse: '6,123.65', r2: '0.723', status: 'Evaluated' },
-  { name: 'Lasso Regression',  mae: '4,222.00', rmse: '6,123.43', r2: '0.723', status: 'Evaluated' },
-  { name: 'Decision Tree',     mae: '3,284.18', rmse: '6,777.52', r2: '0.659', status: 'Evaluated' },
-  { name: 'XGBoost',           mae: '3,104.85', rmse: '5,375.65', r2: '0.785', status: 'Evaluated' },
-  { name: 'Random Forest',     mae: '2,742.90', rmse: '4,894.45', r2: '0.821', status: 'Final Model' },
+  { name: 'Linear Regression', mae: '$4,221.96', rmse: '$6,123.65', r2: '0.723', status: 'Baseline' },
+  { name: 'Ridge Regression',  mae: '$4,226.80', rmse: '$6,123.65', r2: '0.723', status: 'Evaluated' },
+  { name: 'Lasso Regression',  mae: '$4,222.00', rmse: '$6,123.43', r2: '0.723', status: 'Evaluated' },
+  { name: 'Decision Tree',     mae: '$3,284.18', rmse: '$6,777.52', r2: '0.659', status: 'Evaluated' },
+  { name: 'XGBoost',           mae: '$3,104.85', rmse: '$5,375.65', r2: '0.785', status: 'Evaluated' },
+  { name: 'Random Forest',     mae: '$2,742.90', rmse: '$4,894.45', r2: '0.821', status: 'Final Model' },
 ];
 
 export function PerformanceSection() {
@@ -103,7 +103,7 @@ export function PerformanceSection() {
             {[
               {
                 label: 'Mean Absolute Error',
-                value: '1,960',
+                value: '$1,960',
                 unit: 'USD',
                 note: 'Avg. absolute deviation from actual charges',
                 color: 'border-t-primary',
@@ -112,7 +112,7 @@ export function PerformanceSection() {
               },
               {
                 label: 'Root Mean Squared Error',
-                value: '4,283',
+                value: '$4,283',
                 unit: 'USD',
                 note: 'Penalises large outlier predictions more heavily',
                 color: 'border-t-indigo-500',
