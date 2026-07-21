@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { usePredictInsuranceCost } from '@workspace/api-client-react';
+import { usePredictInsuranceCost, useHealthCheck } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -26,11 +26,12 @@ import {
   Loader2,
   AlertCircle,
   RefreshCw,
-  Activity,
   TrendingUp,
   PlusCircle,
-  ClipboardList,
+  ActivitySquare,
+  CheckCircle2,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // ── Form schema ────────────────────────────────────────────────────────────────
 const formSchema = z.object({
@@ -62,12 +63,6 @@ function formatCurrency(amount: number) {
   }).format(amount);
 }
 
-const LABEL_MAP: Record<string, string> = {
-  sex: 'Sex',
-  smoker: 'Smoker',
-  region: 'Region',
-};
-
 function humanise(key: string, val: string | number) {
   if (key === 'sex') return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   if (key === 'smoker') return val === 'yes' ? 'Yes' : 'No';
@@ -85,6 +80,7 @@ export function PredictorSection() {
   const [apiError, setApiError] = useState<string | null>(null);
 
   const predictMutation = usePredictInsuranceCost();
+  const { data: health, isLoading: isHealthLoading } = useHealthCheck();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -125,324 +121,388 @@ export function PredictorSection() {
     setApiError(null);
   };
 
-  const { formState: { isValid } } = form;
-
   return (
-    <section id="predictor" className="py-20">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
-        <div className="mb-10 text-center">
-          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-primary/10 p-3">
-            <Activity className="h-8 w-8 text-primary" data-testid="icon-logo" />
+    <motion.section 
+      id="predictor" 
+      className="min-h-full pb-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {/* ── Hero Band ── */}
+      <div className="relative overflow-hidden bg-card border-b border-border mb-10 pt-16 pb-12 shadow-sm">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-card z-0" />
+        {/* Abstract background elements */}
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[80px] pointer-events-none" />
+        
+        <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                <ActivitySquare className="h-5 w-5" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                Inference <span className="text-primary font-light">Engine</span>
+              </h1>
+            </div>
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+              Execute real-time predictions against our tuned Random Forest ensemble. 
+              Input patient demographic and health factors to generate high-confidence premium estimations.
+            </p>
           </div>
-          <h1
-            className="mb-3 text-4xl font-bold tracking-tight text-foreground"
-            data-testid="text-title"
-          >
-            Medical Insurance Cost Predictor
-          </h1>
-          <p className="text-base text-muted-foreground" data-testid="text-description">
-            Enter patient details to estimate annual insurance costs using our machine learning model.
-            This tool provides data-driven predictions based on key health and demographic factors.
-          </p>
+          
+          <div className="flex items-center self-start md:self-auto bg-black/40 border border-white/5 rounded-full px-4 py-2 backdrop-blur-md">
+            {isHealthLoading ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                <span className="text-xs font-mono text-muted-foreground">CONNECTING...</span>
+              </div>
+            ) : health?.status === 'ok' ? (
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary shadow-[0_0_8px_rgba(20,184,166,0.8)]"></span>
+                </span>
+                <span className="text-xs font-mono font-medium tracking-widest text-primary uppercase">Model Ready</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <div className="h-2.5 w-2.5 rounded-full bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                <span className="text-xs font-mono font-medium tracking-widest text-destructive uppercase">Offline</span>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* ── Prediction Form ── */}
-        {!result && (
-          <Card className="mb-6 shadow-md" data-testid="card-form">
-            <CardHeader>
-              <CardTitle className="text-xl">Patient Information</CardTitle>
-              <CardDescription>Complete all fields to generate a cost estimate</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    {/* Age */}
-                    <FormField
-                      control={form.control}
-                      name="age"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Age</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="e.g. 35"
-                              min={18}
-                              max={100}
-                              aria-describedby="age-hint"
-                              {...field}
-                              value={field.value ?? ''}
-                              data-testid="input-age"
-                            />
-                          </FormControl>
-                          <FormMessage data-testid="error-age" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Sex */}
-                    <FormField
-                      control={form.control}
-                      name="sex"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Sex</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-sex">
-                                <SelectValue placeholder="Select sex" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="male" data-testid="option-sex-male">Male</SelectItem>
-                              <SelectItem value="female" data-testid="option-sex-female">Female</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage data-testid="error-sex" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* BMI */}
-                    <FormField
-                      control={form.control}
-                      name="bmi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>BMI (Body Mass Index)</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="e.g. 24.5"
-                              step="0.1"
-                              min={10}
-                              max={70}
-                              {...field}
-                              value={field.value ?? ''}
-                              data-testid="input-bmi"
-                            />
-                          </FormControl>
-                          <FormMessage data-testid="error-bmi" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Children */}
-                    <FormField
-                      control={form.control}
-                      name="children"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Number of Children</FormLabel>
-                          <Select
-                            onValueChange={(val) => field.onChange(Number(val))}
-                            value={String(field.value ?? 0)}
-                          >
-                            <FormControl>
-                              <SelectTrigger data-testid="select-children">
-                                <SelectValue placeholder="Select number" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                                <SelectItem
-                                  key={num}
-                                  value={String(num)}
-                                  data-testid={`option-children-${num}`}
-                                >
-                                  {num}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage data-testid="error-children" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Smoker */}
-                    <FormField
-                      control={form.control}
-                      name="smoker"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Smoker</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-smoker">
-                                <SelectValue placeholder="Select status" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="no" data-testid="option-smoker-no">No</SelectItem>
-                              <SelectItem value="yes" data-testid="option-smoker-yes">Yes</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage data-testid="error-smoker" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Region */}
-                    <FormField
-                      control={form.control}
-                      name="region"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Region</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-region">
-                                <SelectValue placeholder="Select region" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="northeast" data-testid="option-region-northeast">Northeast</SelectItem>
-                              <SelectItem value="northwest" data-testid="option-region-northwest">Northwest</SelectItem>
-                              <SelectItem value="southeast" data-testid="option-region-southeast">Southeast</SelectItem>
-                              <SelectItem value="southwest" data-testid="option-region-southwest">Southwest</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage data-testid="error-region" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
-                    <Button
-                      type="submit"
-                      disabled={predictMutation.isPending}
-                      className="flex-1"
-                      data-testid="button-submit"
-                    >
-                      {predictMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Calculating…
-                        </>
-                      ) : (
-                        <>
-                          <TrendingUp className="mr-2 h-4 w-4" />
-                          Calculate Cost
-                        </>
-                      )}
-                    </Button>
-                    {apiError && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleReset}
-                        data-testid="button-reset"
-                      >
-                        <RefreshCw className="mr-2 h-4 w-4" />
-                        Reset
-                      </Button>
-                    )}
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* ── Error alert ── */}
-        {apiError && (
-          <Alert variant="destructive" className="mb-6" data-testid="alert-error">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Prediction Error</AlertTitle>
-            <AlertDescription>{apiError}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* ── Result card ── */}
-        {result && submittedValues && !apiError && (
-          <div className="space-y-4" data-testid="card-result">
-            {/* Cost headline */}
-            <Card className="border-primary/20 bg-primary/5 shadow-lg">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg text-muted-foreground">
-                  Estimated Annual Insurance Cost
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p
-                  className="font-mono text-5xl font-bold tracking-tight text-primary"
-                  data-testid="text-result-cost"
-                >
-                  {formatCurrency(result.estimated_annual_cost)}
-                </p>
-                <p className="text-sm text-muted-foreground" data-testid="text-result-currency">
-                  Currency: {result.currency}
-                </p>
-                <p className="text-sm text-muted-foreground border-t border-border/60 pt-3">
-                  This estimate was generated using a trained machine learning regression model.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Patient summary */}
-            <Card className="shadow-sm">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                    Submitted Patient Information
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
-                  {(
-                    [
-                      ['Age', submittedValues.age, 'years'],
-                      ['Sex', humanise('sex', submittedValues.sex), ''],
-                      ['BMI', submittedValues.bmi, ''],
-                      ['Children', submittedValues.children, ''],
-                      ['Smoker', humanise('smoker', submittedValues.smoker), ''],
-                      ['Region', humanise('region', submittedValues.region), ''],
-                    ] as [string, string | number, string][]
-                  ).map(([label, value, unit]) => (
-                    <div key={label}>
-                      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-                      <dd className="mt-0.5 text-sm font-semibold text-foreground">
-                        {value}{unit ? ` ${unit}` : ''}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </CardContent>
-            </Card>
-
-            {/* Create another */}
-            <Button
-              onClick={handleReset}
-              variant="outline"
-              className="w-full"
-              data-testid="button-reset"
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create Another Prediction
-            </Button>
-          </div>
-        )}
-
-        {/* ── Disclaimer ── */}
-        {!result && (
-          <Card
-            className="border-muted-foreground/20 bg-muted/30"
-            data-testid="card-disclaimer"
-          >
-            <CardContent className="pt-6">
-              <p className="text-sm text-muted-foreground" data-testid="text-disclaimer">
-                This prediction is an educational estimate and is not an official insurance quote.
-              </p>
-            </CardContent>
-          </Card>
-        )}
       </div>
-    </section>
+
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* ── Form Column ── */}
+          <div className="lg:col-span-12">
+            <AnimatePresence mode="wait">
+              {!result && (
+                <motion.div
+                  key="form"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="shadow-2xl border-white/10 bg-card/80 backdrop-blur-xl">
+                    <CardHeader className="border-b border-white/5 pb-6">
+                      <CardTitle className="text-xl font-bold flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-primary" />
+                        Patient Parameters
+                      </CardTitle>
+                      <CardDescription className="text-xs uppercase tracking-widest font-mono text-muted-foreground/70">
+                        Input feature vector for model evaluation
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-8">
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
+                          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                            {/* Age */}
+                            <FormField
+                              control={form.control}
+                              name="age"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Age</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      className="bg-black/20 border-white/10 focus-visible:ring-primary h-11"
+                                      type="number"
+                                      placeholder="e.g. 35"
+                                      min={18}
+                                      max={100}
+                                      {...field}
+                                      value={field.value ?? ''}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* Sex */}
+                            <FormField
+                              control={form.control}
+                              name="sex"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Biological Sex</FormLabel>
+                                  <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                        <SelectValue placeholder="Select..." />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                      <SelectContent>
+                                        <SelectItem value="male">Male</SelectItem>
+                                        <SelectItem value="female">Female</SelectItem>
+                                      </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* BMI */}
+                            <FormField
+                              control={form.control}
+                              name="bmi"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">BMI Value</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      className="bg-black/20 border-white/10 focus-visible:ring-primary h-11"
+                                      type="number"
+                                      placeholder="e.g. 24.5"
+                                      step="0.1"
+                                      min={10}
+                                      max={70}
+                                      {...field}
+                                      value={field.value ?? ''}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* Children */}
+                            <FormField
+                              control={form.control}
+                              name="children"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Dependents</FormLabel>
+                                  <Select
+                                    onValueChange={(val) => field.onChange(Number(val))}
+                                    value={String(field.value ?? 0)}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                        <SelectValue placeholder="Select..." />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                                        <SelectItem key={num} value={String(num)}>
+                                          {num}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* Smoker */}
+                            <FormField
+                              control={form.control}
+                              name="smoker"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Tobacco Use</FormLabel>
+                                  <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                        <SelectValue placeholder="Select..." />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value="no">Non-Smoker</SelectItem>
+                                      <SelectItem value="yes">Smoker</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+
+                            {/* Region */}
+                            <FormField
+                              control={form.control}
+                              name="region"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">US Region</FormLabel>
+                                  <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="bg-black/20 border-white/10 focus-visible:ring-primary h-11">
+                                        <SelectValue placeholder="Select..." />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value="northeast">Northeast</SelectItem>
+                                      <SelectItem value="northwest">Northwest</SelectItem>
+                                      <SelectItem value="southeast">Southeast</SelectItem>
+                                      <SelectItem value="southwest">Southwest</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          <div className="flex gap-4 pt-4 border-t border-white/5">
+                            <Button
+                              type="submit"
+                              disabled={predictMutation.isPending}
+                              className="h-12 px-8 flex-1 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(20,184,166,0.5)] transition-all font-bold text-sm tracking-wide"
+                            >
+                              {predictMutation.isPending ? (
+                                <motion.div
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  className="flex items-center gap-2"
+                                >
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  EVALUATING MODEL...
+                                </motion.div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  RUN PREDICTION <TrendingUp className="h-4 w-4 ml-1 opacity-70" />
+                                </div>
+                              )}
+                            </Button>
+                            {apiError && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleReset}
+                                className="h-12 border-white/10 hover:bg-white/5"
+                              >
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                Reset
+                              </Button>
+                            )}
+                          </div>
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* ── Error alert ── */}
+            {apiError && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6"
+              >
+                <Alert variant="destructive" className="bg-destructive/10 border-destructive/30 backdrop-blur-md">
+                  <AlertCircle className="h-4 w-4 text-destructive" />
+                  <AlertTitle className="text-destructive font-semibold">Prediction Failed</AlertTitle>
+                  <AlertDescription className="text-destructive/80 text-sm">{apiError}</AlertDescription>
+                </Alert>
+              </motion.div>
+            )}
+
+            {/* ── Result Card ── */}
+            <AnimatePresence>
+              {result && submittedValues && !apiError && (
+                <motion.div
+                  key="result"
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="space-y-6"
+                >
+                  <Card className="relative overflow-hidden border-primary/30 shadow-[0_0_50px_rgba(20,184,166,0.15)] bg-card/90 backdrop-blur-xl">
+                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px]" />
+                    <CardHeader className="border-b border-primary/10 pb-4 relative z-10 flex flex-row items-center justify-between">
+                      <div>
+                        <CardTitle className="text-xs uppercase tracking-widest text-primary/80 font-mono">
+                          Model Output
+                        </CardTitle>
+                        <p className="text-sm text-foreground font-semibold mt-1">Estimated Annual Charge</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                        <span className="text-[10px] font-mono text-primary font-semibold uppercase tracking-wider">Success</span>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-10 pb-12 relative z-10 text-center">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                      >
+                        <h2 className="text-6xl md:text-7xl font-bold font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-primary/90 to-primary/50 drop-shadow-sm">
+                          {formatCurrency(result.estimated_annual_cost)}
+                        </h2>
+                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/30 border border-white/5">
+                          <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
+                          <p className="text-xs font-mono text-muted-foreground/80 tracking-wider">
+                            BASE CURRENCY: {result.currency}
+                          </p>
+                        </div>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-white/10 bg-black/20 backdrop-blur-md">
+                    <CardHeader className="pb-4 border-b border-white/5">
+                      <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+                        Feature Vector Used
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                        {(
+                          [
+                            ['Age', submittedValues.age, 'YRS'],
+                            ['Sex', humanise('sex', submittedValues.sex), ''],
+                            ['BMI', submittedValues.bmi, ''],
+                            ['Children', submittedValues.children, ''],
+                            ['Smoker', humanise('smoker', submittedValues.smoker), ''],
+                            ['Region', humanise('region', submittedValues.region), ''],
+                          ] as [string, string | number, string][]
+                        ).map(([label, value, unit], i) => (
+                          <motion.div 
+                            key={label}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + (i * 0.05) }}
+                            className="bg-card/50 p-4 rounded-xl border border-white/5"
+                          >
+                            <dt className="text-[10px] uppercase font-mono tracking-widest text-muted-foreground/60 mb-1">{label}</dt>
+                            <dd className="text-sm font-semibold text-foreground flex items-baseline gap-1">
+                              {value}
+                              {unit && <span className="text-[10px] text-muted-foreground font-mono">{unit}</span>}
+                            </dd>
+                          </motion.div>
+                        ))}
+                      </div>
+                      
+                      <div className="mt-8 flex justify-center">
+                        <Button
+                          onClick={handleReset}
+                          variant="outline"
+                          className="h-11 px-8 rounded-full border-white/10 bg-transparent hover:bg-white/5 hover:text-primary transition-colors text-xs font-semibold tracking-wide uppercase"
+                        >
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          New Evaluation
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </motion.section>
   );
 }

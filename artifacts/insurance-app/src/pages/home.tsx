@@ -4,10 +4,13 @@ import { PredictorSection } from '@/components/PredictorSection';
 import { AboutModelSection } from '@/components/AboutModelSection';
 import { PerformanceSection } from '@/components/PerformanceSection';
 import { DatasetSection } from '@/components/DatasetSection';
+import { ArchitectureSection } from '@/components/ArchitectureSection';
+import { FooterSection } from '@/components/FooterSection';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PANELS: Record<TabId, React.ReactNode> = {
   predictor:   <PredictorSection />,
-  about:       <AboutModelSection />,
+  about:       <div className="space-y-0 divide-y divide-white/5"><AboutModelSection /><ArchitectureSection /></div>,
   performance: <PerformanceSection />,
   dataset:     <DatasetSection />,
 };
@@ -16,16 +19,27 @@ export default function Home() {
   const [active, setActive] = useState<TabId>('predictor');
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-background">
+    <div className="flex h-dvh overflow-hidden bg-background text-foreground dark">
       {/* Sidebar / mobile top bar */}
       <NavBar active={active} onNav={setActive} />
 
-      {/* Content panel — offset for sidebar on desktop, top bar on mobile */}
-      <main
-        key={active}
-        className="flex-1 overflow-y-auto md:ml-56 mt-14 md:mt-0"
-      >
-        {PANELS[active]}
+      {/* Content panel */}
+      <main className="flex-1 overflow-y-auto md:ml-64 mt-16 md:mt-0 relative flex flex-col scroll-smooth">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 flex flex-col"
+          >
+            <div className="flex-1">
+              {PANELS[active]}
+            </div>
+            <FooterSection />
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );

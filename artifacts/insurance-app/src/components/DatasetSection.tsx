@@ -1,161 +1,143 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, Target } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Target, Hash, BarChart3, DatabaseZap } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const FEATURES = [
-  {
-    name: 'Age',
-    type: 'Numerical',
-    desc: 'Age of the primary insurance beneficiary (18–64).',
-    color: 'bg-blue-50 border-blue-100 text-blue-700',
-    dot: 'bg-blue-400',
-  },
-  {
-    name: 'Sex',
-    type: 'Categorical',
-    desc: 'Biological sex of the beneficiary: male or female.',
-    color: 'bg-purple-50 border-purple-100 text-purple-700',
-    dot: 'bg-purple-400',
-  },
-  {
-    name: 'BMI',
-    type: 'Numerical',
-    desc: 'Body mass index — a ratio of weight to height squared.',
-    color: 'bg-blue-50 border-blue-100 text-blue-700',
-    dot: 'bg-blue-400',
-  },
-  {
-    name: 'Children',
-    type: 'Numerical',
-    desc: 'Number of dependents covered by the insurance policy (0–5).',
-    color: 'bg-blue-50 border-blue-100 text-blue-700',
-    dot: 'bg-blue-400',
-  },
-  {
-    name: 'Smoker',
-    type: 'Categorical',
-    desc: 'Whether the beneficiary is a tobacco smoker: yes or no.',
-    color: 'bg-purple-50 border-purple-100 text-purple-700',
-    dot: 'bg-purple-400',
-  },
-  {
-    name: 'Region',
-    type: 'Categorical',
-    desc: 'US geographic region: northeast, northwest, southeast, or southwest.',
-    color: 'bg-purple-50 border-purple-100 text-purple-700',
-    dot: 'bg-purple-400',
-  },
+  { name: 'Age', type: 'Numerical', desc: 'Beneficiary age (18–64)', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
+  { name: 'Sex', type: 'Categorical', desc: 'Biological sex', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
+  { name: 'BMI', type: 'Numerical', desc: 'Body mass index ratio', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
+  { name: 'Children', type: 'Numerical', desc: 'Number of dependents', icon: Hash, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
+  { name: 'Smoker', type: 'Categorical', desc: 'Tobacco smoking status', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
+  { name: 'Region', type: 'Categorical', desc: 'US geographic region', icon: BarChart3, color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20' },
 ];
 
 const EDA_INSIGHTS = [
-  'The dataset contains both numerical and categorical variables.',
-  'No missing values were detected across any feature or the target column.',
-  'Insurance charges are strongly right-skewed — most patients incur moderate costs while a minority incur very high costs.',
-  'Smoking status has the strongest relationship with insurance charges.',
-  'Age and BMI show moderate positive relationships with charges.',
-  'No severe multicollinearity was detected among numerical features.',
-  'High-cost outliers were retained because they represent realistic medical cases, not data errors.',
+  'Zero missing values detected across the full 1,338 records.',
+  'Target variable (charges) is heavily right-skewed; implies logarithmic transformation utility.',
+  'Smoking status exhibits highest singular correlation with medical charges.',
+  'Age and BMI show moderate positive linear relationships with cost.',
+  'No severe multicollinearity found among independent continuous features.',
 ];
 
 const PREPROCESSING = [
-  'One-hot encoding for all categorical variables (sex, smoker, region)',
-  'Feature scaling applied for linear and regularised models (StandardScaler)',
-  'Scikit-learn Pipeline and ColumnTransformer for reproducible transformations',
-  'Log transformation of the target variable to reduce skew and improve model fit',
-  'No aggressive outlier removal — realistic extreme values preserved',
-  'Held-out test set created before any modelling to prevent data leakage',
+  'One-hot encoding applied to nominal categorical predictors.',
+  'StandardScaler normalization fitted on continuous numeric predictors.',
+  'Target log-transformed to stabilize variance and normalize error distribution.',
+  'Rigid 80/20 train-test split executed prior to any scaling to prevent leakage.',
+  'Scikit-learn Pipeline utilized to bind transformations securely.',
 ];
 
 export function DatasetSection() {
   return (
-    <section id="dataset" className="py-20">
+    <motion.section 
+      id="dataset" 
+      className="py-16 md:py-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold tracking-tight text-foreground">
-            Dataset and EDA Insights
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-white/10 text-muted-foreground text-xs font-mono uppercase tracking-widest mb-6">
+            <DatabaseZap className="h-3.5 w-3.5 text-primary" /> Data Engineering
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
+            Feature Matrix & Pipeline
           </h2>
-          <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-            The model was trained on the Medical Cost Personal Dataset — a widely-used benchmark
-            with 1,338 patient records and six predictor variables.
+          <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
+            Exploratory insights and deterministic transformations applied to the benchmark Medical Cost Personal Dataset to forge a clean predictive signal.
           </p>
         </div>
 
-        {/* Feature cards */}
-        <div className="mb-6">
-          <h3 className="mb-4 text-base font-semibold text-foreground">Dataset Features</h3>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f) => (
-              <Card key={f.name} className="shadow-xs">
-                <CardContent className="pt-4 pb-4 px-4">
-                  <div className="flex items-start gap-3">
-                    <span className={`mt-0.5 h-2.5 w-2.5 flex-shrink-0 rounded-full ${f.dot}`} />
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-sm text-foreground">{f.name}</span>
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-medium border ${f.color}`}
-                        >
-                          {f.type}
-                        </span>
+        {/* Features Grid */}
+        <div className="mb-12">
+          <h3 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6 pl-1">Input Vectors</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <motion.div
+                  key={f.name}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + (i * 0.05) }}
+                >
+                  <Card className={`bg-card/50 border ${f.border} shadow-sm h-full`}>
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <div className={`p-2 rounded-lg mb-3 ${f.bg} ${f.color}`}>
+                        <Icon className="h-4 w-4" />
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">{f.desc}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      <p className="text-sm font-semibold text-foreground">{f.name}</p>
+                      <p className="text-[10px] font-mono mt-1 mb-2 text-muted-foreground uppercase">{f.type}</p>
+                      <p className="text-xs text-muted-foreground/70 leading-tight">{f.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Target variable */}
-        <Card className="mb-10 border-primary/30 bg-primary/5 shadow-xs">
-          <CardContent className="flex items-center gap-4 py-4 px-5">
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
-              <Target className="h-5 w-5 text-primary" />
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Target: Medical Insurance Charges</p>
-              <p className="text-xs text-muted-foreground">
-                Continuous numerical variable — annual insurance cost in USD.&nbsp;
-                <span className="font-medium text-foreground">Problem Type: Regression</span>
-              </p>
+        {/* Target */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="mb-12"
+        >
+          <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/10 via-card to-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(20,184,166,0.05)]">
+            <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full blur-[60px] pointer-events-none" />
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/20 border border-primary/30 shadow-inner">
+              <Target className="h-6 w-6 text-primary" />
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <h4 className="text-lg font-bold text-foreground mb-1">Target Variable: Annual Medical Charges</h4>
+              <p className="text-sm text-muted-foreground">Continuous numerical output (USD) modeled via regression analysis.</p>
+            </div>
+            <div className="md:ml-auto flex shrink-0">
+              <div className="px-4 py-2 rounded-lg bg-black/40 border border-white/5 text-xs font-mono uppercase text-primary/90 tracking-wider">
+                Y ∈ ℝ⁺
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
-        {/* EDA + Preprocessing side by side */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* EDA insights */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Key EDA Findings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {EDA_INSIGHTS.map((insight, i) => (
-                <div key={i} className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-                  <p className="text-sm text-muted-foreground">{insight}</p>
-                </div>
-              ))}
+        {/* Split Info */}
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card className="bg-card border-white/5 shadow-xl">
+            <CardContent className="p-8">
+              <h3 className="text-sm font-mono uppercase tracking-widest text-foreground mb-6 border-b border-white/10 pb-4">
+                Exploratory Findings
+              </h3>
+              <ul className="space-y-4">
+                {EDA_INSIGHTS.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground/90">
+                    <span className="text-primary mt-0.5 opacity-70">■</span>
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
-
-          {/* Preprocessing strategy */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Preprocessing Strategy</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {PREPROCESSING.map((item, i) => (
-                <div key={i} className="flex items-start gap-2.5">
-                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                  <p className="text-sm text-muted-foreground">{item}</p>
-                </div>
-              ))}
+          
+          <Card className="bg-card border-white/5 shadow-xl relative overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/50 to-transparent" />
+            <CardContent className="p-8">
+              <h3 className="text-sm font-mono uppercase tracking-widest text-foreground mb-6 border-b border-white/10 pb-4">
+                Transformation Strategy
+              </h3>
+              <ul className="space-y-4">
+                {PREPROCESSING.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground/90">
+                    <span className="text-primary mt-0.5 opacity-70">▹</span>
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

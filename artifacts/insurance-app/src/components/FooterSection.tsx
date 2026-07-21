@@ -1,58 +1,59 @@
-import { Activity } from 'lucide-react';
+import { Hexagon } from 'lucide-react';
 
 const TECHNOLOGIES = [
   'Python',
   'Scikit-learn',
-  'XGBoost',
   'FastAPI',
-  'React + Vite',
+  'React',
   'TypeScript',
-  'Replit',
+  'Tailwind CSS',
+  'Framer Motion'
 ];
 
 export function FooterSection() {
   return (
-    <footer className="border-t border-border bg-card py-10">
+    <footer className="border-t border-white/5 bg-black/50 py-12 relative z-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-6 text-center">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-              <Activity className="h-4 w-4 text-primary" />
-            </span>
-            <span className="font-semibold text-foreground">Insurance Cost Predictor</span>
-          </div>
-
-          {/* Disclaimers */}
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">
-              Educational machine learning application
-            </p>
-            <p className="text-xs text-muted-foreground max-w-xl">
-              Predictions are estimates and are not official insurance quotations. This tool is
-              intended for academic demonstration purposes only.
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+          
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                <Hexagon className="h-4 w-4 text-primary" />
+              </span>
+              <span className="font-bold text-foreground uppercase tracking-wide text-sm">
+                Omni<span className="text-primary">Predict</span>
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground/60 max-w-sm leading-relaxed font-mono">
+              Academic ML demonstration. Predictions operate as uncalibrated estimates; not valid for actuarial underwriting.
             </p>
           </div>
 
-          {/* Technologies */}
-          <div>
-            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              Technologies Used
+          <div className="flex flex-col items-center md:items-end gap-4">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+              Stack Architecture
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center md:justify-end gap-2 max-w-md">
               {TECHNOLOGIES.map((tech) => (
                 <span
                   key={tech}
-                  className="rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground"
+                  className="rounded px-2.5 py-1 border border-white/10 bg-white/5 text-[10px] font-mono text-muted-foreground uppercase tracking-wider"
                 >
                   {tech}
                 </span>
               ))}
             </div>
           </div>
-
-          <p className="text-xs text-muted-foreground/60">
-            Built with Replit AI Agent · ISEM 503 Project · {new Date().getFullYear()}
+          
+        </div>
+        
+        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[10px] font-mono text-muted-foreground/40 uppercase tracking-widest">
+            ISEM 503 · {new Date().getFullYear()}
+          </p>
+          <p className="text-[10px] font-mono text-muted-foreground/40 uppercase tracking-widest">
+            Deployed via Replit AI
           </p>
         </div>
       </div>

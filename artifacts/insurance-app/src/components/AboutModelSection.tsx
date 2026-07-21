@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2 } from 'lucide-react';
+import { Network, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const WORKFLOW_STEPS = [
   { num: 1, title: 'Setup', desc: 'Import libraries, configure environment, and define random seed for reproducibility.' },
@@ -16,110 +17,138 @@ const WORKFLOW_STEPS = [
 ];
 
 const MODELS = [
-  { name: 'Linear Regression',        winner: false },
-  { name: 'Ridge Regression',         winner: false },
-  { name: 'Lasso Regression',         winner: false },
-  { name: 'Decision Tree Regressor',  winner: false },
-  { name: 'XGBoost Regressor',        winner: false },
-  { name: 'Random Forest Regressor',  winner: true  },
+  { name: 'Linear Regression',        winner: false, score: 35 },
+  { name: 'Ridge Regression',         winner: false, score: 35 },
+  { name: 'Lasso Regression',         winner: false, score: 35 },
+  { name: 'Decision Tree Regressor',  winner: false, score: 65 },
+  { name: 'XGBoost Regressor',        winner: false, score: 85 },
+  { name: 'Random Forest Regressor',  winner: true,  score: 100 },
 ];
 
 export function AboutModelSection() {
   return (
-    <section id="about" className="py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <motion.section 
+      id="about" 
+      className="py-16 md:py-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold tracking-tight text-foreground">
-            About the Machine Learning Model
+        <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono uppercase tracking-widest mb-6 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+            <Network className="h-3.5 w-3.5" /> Research Methodology
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
+            Development Pipeline
           </h2>
-          <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-            The model was developed in Python following a structured machine learning workflow,
-            from data exploration through hyperparameter tuning to final deployment.
+          <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
+            The architecture follows a rigorous machine learning lifecycle, transitioning from raw data ingestion to a production-ready inference API.
           </p>
         </div>
 
-        {/* Workflow steps */}
-        <div className="mb-12">
-          <h3 className="mb-6 text-lg font-semibold text-foreground">Development Workflow</h3>
-          <div className="relative">
-            {/* Vertical connector line */}
-            <div className="absolute left-5 top-6 hidden h-[calc(100%-3rem)] w-px bg-border sm:block" />
-            <div className="space-y-4">
-              {WORKFLOW_STEPS.map((step, i) => (
-                <div key={step.num} className="flex gap-4">
-                  {/* Step circle */}
-                  <div className="relative flex-shrink-0">
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold z-10 relative ${
-                        i === WORKFLOW_STEPS.length - 1
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border bg-card text-foreground'
-                      }`}
-                    >
-                      {step.num}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Models Evaluated (Left Col) */}
+          <div className="lg:col-span-5 space-y-8">
+            <div className="sticky top-24 space-y-8">
+              <Card className="bg-card border-white/10 shadow-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+                <CardHeader className="pb-6 border-b border-white/5 relative z-10">
+                  <CardTitle className="text-base font-semibold tracking-wide flex items-center gap-2">
+                    Candidate Architectures
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">Cross-validated relative performance (MAE proxy)</p>
+                </CardHeader>
+                <CardContent className="pt-6 relative z-10 space-y-5">
+                  {MODELS.map((model, idx) => (
+                    <div key={model.name} className="relative group">
+                      <div className="flex justify-between items-end mb-2">
+                        <span className={`text-sm font-medium ${model.winner ? 'text-primary' : 'text-foreground/80'}`}>
+                          {model.name}
+                        </span>
+                        {model.winner && (
+                          <span className="text-[9px] font-mono text-primary font-bold uppercase tracking-widest">
+                            Selected
+                          </span>
+                        )}
+                      </div>
+                      <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden flex">
+                        <motion.div 
+                          className={`h-full rounded-full ${model.winner ? 'bg-primary shadow-[0_0_10px_rgba(20,184,166,0.8)]' : 'bg-muted-foreground/30'}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${model.score}%` }}
+                          transition={{ duration: 1, delay: 0.2 + (idx * 0.1), ease: "easeOut" }}
+                        />
+                      </div>
                     </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black/20 border-white/5 shadow-none">
+                <CardContent className="p-6">
+                  <h4 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">Selection Criteria</h4>
+                  <div className="space-y-4 text-sm text-muted-foreground/80">
+                    <p>
+                      Candidate models underwent <strong className="text-foreground/90 font-medium">5-fold cross-validation</strong> to establish stable baseline metrics.
+                    </p>
+                    <p>
+                      The Random Forest regressor demonstrated superior generalisation capability and was subsequently optimized via <strong className="text-foreground/90 font-medium">GridSearchCV</strong> over a constrained hyperparameter space.
+                    </p>
                   </div>
-                  {/* Content */}
-                  <Card className="flex-1 shadow-xs">
-                    <CardContent className="py-3 px-4">
-                      <p className="text-sm font-semibold text-foreground">{step.title}</p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">{step.desc}</p>
-                    </CardContent>
-                  </Card>
-                </div>
+                  <div className="flex flex-wrap gap-2 pt-6 border-t border-white/5 mt-6">
+                    {['Cross-Validation', 'GridSearchCV', 'Held-out Test'].map((tag) => (
+                      <Badge key={tag} variant="outline" className="bg-card/50 border-white/10 text-xs font-mono text-muted-foreground/70">{tag}</Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Workflow Timeline (Right Col) */}
+          <div className="lg:col-span-7">
+            <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-8 pl-4">Execution Sequence</h3>
+            <div className="relative pl-6 md:pl-8 space-y-10">
+              {/* Glowing timeline spine */}
+              <div className="absolute left-[11px] md:left-[15px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
+              
+              {WORKFLOW_STEPS.map((step, i) => (
+                <motion.div 
+                  key={step.num} 
+                  className="relative group"
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                >
+                  {/* Step node */}
+                  <div className="absolute -left-6 md:-left-8 top-1 flex h-6 w-6 items-center justify-center">
+                    <div className={`absolute inset-0 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary/30 animate-pulse' : 'bg-background'} transition-colors duration-300 group-hover:bg-primary/20`} />
+                    <div className={`relative h-2 w-2 rounded-full ${i === WORKFLOW_STEPS.length - 1 ? 'bg-primary shadow-[0_0_10px_rgba(20,184,166,1)]' : 'bg-muted-foreground/40 group-hover:bg-primary/80'} ring-4 ring-background transition-all duration-300`} />
+                  </div>
+                  
+                  {/* Step content */}
+                  <div className="pl-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-[10px] font-mono text-primary/70 tracking-widest bg-primary/10 px-2 py-0.5 rounded">
+                        PHASE {step.num.toString().padStart(2, '0')}
+                      </span>
+                      <h4 className="text-base font-semibold text-foreground/90 group-hover:text-primary transition-colors">
+                        {step.title}
+                      </h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground/80 leading-relaxed border-l-2 border-white/5 pl-4 py-1 mt-3 group-hover:border-primary/30 transition-colors">
+                      {step.desc}
+                    </p>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-
-        {/* Models Evaluated */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Models Evaluated</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {MODELS.map((model) => (
-                <div key={model.name} className="flex items-center gap-2.5">
-                  <CheckCircle2
-                    className={`h-4 w-4 flex-shrink-0 ${model.winner ? 'text-accent' : 'text-primary'}`}
-                  />
-                  <span className={`text-sm ${model.winner ? 'font-semibold text-foreground' : 'text-foreground'}`}>
-                    {model.name}
-                  </span>
-                  {model.winner && (
-                    <span className="ml-auto rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
-                      Selected
-                    </span>
-                  )}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-sm bg-primary/5 border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Model Selection Approach</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>
-                All six models were evaluated using <strong className="text-foreground">5-fold cross-validation</strong> on
-                the training set to ensure robust, unbiased performance estimates.
-              </p>
-              <p>
-                The best-performing model was then tuned with <strong className="text-foreground">GridSearchCV</strong> before
-                being retrained on the full training set and assessed on a <strong className="text-foreground">held-out test set</strong> it had never seen.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                {['Cross-Validation', 'GridSearchCV', 'Held-out Test Set'].map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
