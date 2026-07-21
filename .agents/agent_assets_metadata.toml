@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "qTFtpXfhsbYtz3Yn0ZBFC"
+uri = "file://Medical_Insurance_Cost_Predictor_Report.docx"
+type = "word_document"
+title = "Medical Insurance Cost Predictor — Project Report"

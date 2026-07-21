@@ -1,45 +1,58 @@
-# [Project name]
+# Medical Insurance Cost Predictor
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A full-stack medical insurance cost prediction app that uses a trained XGBoost ML model to estimate annual insurance costs based on patient details.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
+- `artifacts/insurance-app: web` — React+Vite frontend (port 25780, served at `/`)
+- `artifacts/api-server: API Server` — Express API server (port 8080, served at `/api`)
+- `artifacts/api-server: ML Server` — Python FastAPI ML server (port 8001, served at `/api/predict`)
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm run typecheck` — full typecheck across all packages
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
+- Frontend: React 19 + Vite + Tailwind CSS (artifacts/insurance-app)
+- API: Express 5 (artifacts/api-server)
+- ML API: Python FastAPI + Uvicorn + XGBoost + Scikit-learn (artifacts/ml-server)
+- Model: Pre-trained XGBoost pipeline (artifacts/ml-server/insurance_model.joblib)
+- Validation: Zod (server), Pydantic (Python)
 - API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — OpenAPI spec (source of truth for API contracts)
+- `lib/api-client-react/src/generated/` — generated React Query hooks
+- `lib/api-zod/src/generated/` — generated Zod validation schemas
+- `artifacts/insurance-app/src/` — React frontend
+- `artifacts/api-server/src/` — Express API server
+- `artifacts/ml-server/main.py` — FastAPI ML prediction server
+- `artifacts/ml-server/insurance_model.joblib` — trained XGBoost model (do not retrain)
+- `artifacts/ml-server/.venv/` — Python virtual environment (managed by uv)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Python ML server runs as a separate service (port 8001) routed at `/api/predict` via the shared proxy; Express handles all other `/api/*` routes.
+- Python packages installed into a local `.venv` using `uv` (fast, avoids Nix pip conflicts).
+- Model is loaded once at startup and never retrained; `model.predict()` is called for every request.
+- OpenAPI spec defines the predict endpoint at `/api/predict` — codegen generates the frontend hook `usePredictInsuranceCost`.
+- Inputs are validated by both Pydantic (Python) and Zod (generated from OpenAPI spec).
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Users enter 6 patient details (age, sex, BMI, children, smoker, region) and the app predicts their estimated annual insurance cost in USD using a real XGBoost model trained on the insurance dataset.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+_Populate as you build._
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The ML Server `.venv` must exist before the workflow starts. If you delete it, run `uv venv artifacts/ml-server/.venv && uv pip install --python artifacts/ml-server/.venv/bin/python fastapi "uvicorn[standard]" pandas numpy joblib scikit-learn xgboost pydantic`.
+- Do not change `info.title` in the OpenAPI spec — it controls generated filenames.
+- The ML model file must stay at `artifacts/ml-server/insurance_model.joblib`.
 
 ## Pointers
 
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.

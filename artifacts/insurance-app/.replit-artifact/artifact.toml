@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Insurance Cost Predictor"
+version = "1.0.0"
+id = "artifacts/insurance-app"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25780
+
+[services.development]
+run = "pnpm --filter @workspace/insurance-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/insurance-app", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/insurance-app/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25780"
+BASE_PATH = "/"

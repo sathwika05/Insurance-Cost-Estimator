@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: prediction
+    description: Insurance cost prediction operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /predict:
+    post:
+      operationId: predictInsuranceCost
+      tags: [prediction]
+      summary: Predict insurance cost
+      description: Predicts annual insurance cost based on patient details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PredictionInput"
+      responses:
+        "200":
+          description: Prediction result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredictionResult"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "503":
+          description: Model not available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +68,61 @@ components:
       required:
         - status
 
+    PredictionInput:
+      type: object
+      required: [age, sex, bmi, children, smoker, region]
+      properties:
+        age:
+          type: integer
+          minimum: 18
+          maximum: 100
+          description: Age of primary beneficiary
+        sex:
+          type: string
+          enum: [male, female]
+          description: Biological sex
+        bmi:
+          type: number
+          minimum: 10
+          maximum: 70
+          description: Body mass index
+        children:
+          type: integer
+          minimum: 0
+          maximum: 10
+          description: Number of children/dependents covered
+        smoker:
+          type: string
+          enum: [yes, no]
+          description: Smoker status
+        region:
+          type: string
+          enum: [northeast, northwest, southeast, southwest]
+          description: US region of coverage
+
+    PredictionResult:
+      type: object
+      required: [estimated_annual_cost, currency]
+      properties:
+        estimated_annual_cost:
+          type: number
+          description: Predicted annual insurance cost in USD
+        currency:
+          type: string
+          description: Currency code (always USD)
+
+    ValidationError:
+      type: object
+      required: [detail]
+      properties:
+        detail:
+          type: string
+          description: Validation error message
+
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Error message

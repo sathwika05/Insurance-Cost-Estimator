@@ -1,0 +1,207 @@
+Build a full-stack medical insurance cost prediction application.
+
+Technology stack:
+
+Frontend:
+- Next.js
+- TypeScript
+- App Router
+- Tailwind CSS
+- Responsive design
+
+Backend:
+- Python
+- FastAPI
+- Pandas
+- Joblib
+- Scikit-learn
+- XGBoost
+
+I already trained the machine-learning model and saved it as:
+
+insurance_model.joblib
+
+Important model requirements:
+- The saved model uses XGBoost.
+- The saved model already contains the fitted preprocessing pipeline and trained model.
+- Do not retrain the model.
+- Do not manually recreate one-hot encoding or scaling.
+- Load insurance_model.joblib once when the FastAPI backend starts.
+- Use model.predict() for every prediction.
+
+Create a monorepo with this structure:
+
+medical-insurance-app/
+├── frontend/
+│   ├── app/
+│   │   ├── page.tsx
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   ├── components/
+│   │   ├── InsuranceForm.tsx
+│   │   ├── PredictionResult.tsx
+│   │   └── LoadingSpinner.tsx
+│   ├── lib/
+│   │   └── api.ts
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── next.config.ts
+│
+├── backend/
+│   ├── main.py
+│   ├── insurance_model.joblib
+│   └── requirements.txt
+│
+├── README.md
+└── .gitignore
+
+Backend requirements:
+
+1. Create a FastAPI application.
+
+2. Enable CORS for the Next.js frontend.
+
+3. Create these endpoints:
+
+GET /health
+
+POST /api/predict
+
+4. The POST /api/predict endpoint should accept JSON in this format:
+
+{
+  "age": 35,
+  "sex": "female",
+  "bmi": 28.5,
+  "children": 2,
+  "smoker": "no",
+  "region": "northeast"
+}
+
+5. Validate inputs using Pydantic:
+
+- age: integer between 18 and 100
+- sex: male or female
+- bmi: float between 10 and 70
+- children: integer between 0 and 10
+- smoker: yes or no
+- region: northeast, northwest, southeast, or southwest
+
+6. Convert the input to a pandas DataFrame with the exact column order:
+
+age
+sex
+bmi
+children
+smoker
+region
+
+7. Run:
+
+prediction = model.predict(input_df)[0]
+
+8. Return:
+
+{
+  "estimated_annual_cost": 12345.67,
+  "currency": "USD"
+}
+
+9. Return clean JSON errors and do not expose Python stack traces.
+
+10. Load the model only once at startup.
+
+11. Check that insurance_model.joblib exists and show a clear startup error if missing.
+
+12. Backend requirements.txt must include:
+
+fastapi
+uvicorn
+pandas
+numpy
+joblib
+scikit-learn
+xgboost
+pydantic
+
+Frontend requirements:
+
+1. Use Next.js with TypeScript and App Router.
+
+2. Create a polished healthcare-style insurance cost prediction dashboard.
+
+3. Use a clean white background with blue and teal accents.
+
+4. Include:
+- application title
+- short explanation
+- prediction form
+- result card
+- educational disclaimer
+
+5. Form fields:
+- Age
+- Sex
+- BMI
+- Number of children
+- Smoker status
+- Region
+
+6. Use dropdowns for categorical values.
+
+7. Add client-side validation.
+
+8. Show field-level validation messages.
+
+9. Disable the submit button while predicting.
+
+10. Show a loading spinner while waiting for the FastAPI response.
+
+11. Display the result prominently:
+
+Estimated Annual Insurance Cost
+$12,345.67
+
+12. Show API errors in a user-friendly alert.
+
+13. Preserve the form values after prediction.
+
+14. Add a Reset button.
+
+15. Format currency using Intl.NumberFormat.
+
+16. Make the frontend responsive for desktop, tablet, and mobile.
+
+17. Add an educational disclaimer:
+
+"This prediction is an educational estimate and is not an official insurance quote."
+
+Frontend API configuration:
+
+- Create a NEXT_PUBLIC_API_URL environment variable.
+- Use it for all requests to the FastAPI backend.
+- Do not hard-code localhost in the React component.
+- Create a reusable API function in frontend/lib/api.ts.
+
+Use:
+
+POST `${NEXT_PUBLIC_API_URL}/api/predict`
+
+Replit requirements:
+
+- Configure the FastAPI backend to run on host 0.0.0.0.
+- Use the Replit PORT environment variable when available.
+- Configure the Next.js frontend to run on a separate port.
+- Ensure both frontend and backend can run in Replit.
+- Add clear run instructions in README.md.
+- Do not generate fake predictions.
+- Do not create a placeholder model.
+- Use only the uploaded insurance_model.joblib model.
+
+After building the app, test:
+- valid prediction
+- invalid age
+- invalid BMI
+- backend unavailable
+- missing model file
+- mobile layout

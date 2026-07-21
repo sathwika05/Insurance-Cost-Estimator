@@ -1,0 +1,97 @@
+Complete the course at https://www.deeplearning.ai/courses/vibe-coding-101-with-replitLinks to an external site. 
+
+You need to answer the following question within the implemented app and the corresponding report submitted here:
+How AI did help in building the application? (25%)
+What are the lessons learnt from building the application (30%)? 
+Are there any similar applications? (25%)
+What is you proposed application’s advantages and disadvantages? (10%)
+Summary/Conclusion (10%)
+ 
+
+You to submit a report about this application that you have built.  The report will be in the form of word document. I expect at least 1200-1500-word report.
+The application should involve a ML model that is used to make predictions when data is entered from the web page. 
+LATE SUBMISSION: EVERY DAY AFTER THE DUE DATE  WILL HAVE A PENALTY of 20% FOR LATE SUBMISSION PER DAY. AND NO EMAIL SUBMISSION; AND NO SUBMISSION ONCE THE DROPBOX CLOSES
+
+Please Note: The level of performance expected for students on core competencies and program learning outcomes varies depending on the course. The numbers at the end of the key assignment name identify the expected level of performance for a specific key assignment. For example, for the key assignment entitled “HU14 GEND 201 Final Research Paper KA1 85%2,” the 85%2 part of the title means that 85% of students are expected to score a level 2 on a four-point scale where level 1 represents a novice rating, and a level 4 represents an advanced rating.
+
+ 
+
+Rubric
+HU14 ISEM 503 Project 1 KA1 75%3
+HU14 ISEM 503 Project 1 KA1 75%3
+Criteria	Ratings	Pts
+ This criterion is linked to a Learning OutcomeCRIT 0.3e Solution
+CRIT 0.3e Implement Solution
+threshold: 3.0 pts
+4 pts
+Advanced: Implement solution to a given problem statement in a manner that thoroughly addresses multiple contextual factors of the problem.
+3 pts
+Proficient: Implement solution to a given problem statement and address minimal contextual factors of the problem.
+2 pts
+Emerging: Implement solution to a given problem statement.
+1 pts
+Novice: Develop plan to implement a solution to a given problem statement.
+--
+ This criterion is linked to a Learning OutcomeINFO 0.1a Concepts
+INFO 0.1a Describe Key Concepts
+threshold: 3.0 pts
+4 pts
+Advanced: Describe the scope of a given information need and determine all relevant key concepts.
+3 pts
+Proficient: Describe the scope of a given information need and determine several key concepts.
+2 pts
+Emerging: Define the scope of a given information need and determine some key concepts.
+1 pts
+Novice: Name the scope of a given information need and identify zero or one key concept.
+--
+ This criterion is linked to a Learning OutcomeENTR 0.3c Action Plan
+ENTR 0.3c Design Action Plan
+threshold: 3.0 pts
+4 pts
+Advanced: Design and justify or execute an action plan to address a given ambiguous circumstance.
+3 pts
+Proficient: Design an action plan to address a given ambiguous circumstance.
+2 pts
+Emerging: Identify possible steps in an action plan and choose one course of action to address a given ambiguous circumstance.
+1 pts
+Novice: Identify possible steps in an action plan to address a given ambiguous circumstance.
+--
+ This criterion is linked to a Learning OutcomeISEM 1.1 Environments
+ISEM 1.1 Analyze external and internal business environments (market, tech, regulatory).
+
+threshold: 3.0 pts
+4 pts
+Advanced: Triangulates multi-source market/tech/regulatory data; surfaces interactions and uncertainties; implications are defensible and nuanced.
+3 pts
+Proficient: Accurately identifies and interprets key factors; links to implications are mostly sound; minor gaps.
+2 pts
+Emerging: Recognizes some factors; interpretation is partial or generic; limited linkage to implications.
+1 pts
+Novice: Lists factors without interpretation; misses major external/internal drivers.
+--
+ This criterion is linked to a Learning OutcomeISEM 1.2 Models
+ISEM 1.2 Choose appropriate analytical/AI/cloud models for the problem context.
+
+threshold: 3.0 pts
+4 pts
+Advanced: Matches model class to objectives/constraints; considers alternatives; justifies fit with evidence.
+3 pts
+Proficient: Selects suitable model with basic justification; acknowledges some constraints.
+2 pts
+Emerging: Model choice partially aligned; weak justification; constraints not considered.
+1 pts
+Novice: Misaligned or unjustified model choice.
+--
+ This criterion is linked to a Learning OutcomeISEM 1.4 Business Processes
+ISEM 1.4 Model and redesign processes aligned to strategy and KPIs.
+
+threshold: 3.0 pts
+4 pts
+Advanced: Creates to‑be models aligned with strategy; eliminates waste; aligns with KPIs.
+3 pts
+Proficient: Proposes reasonable redesign aligned to goals; some inefficiencies remain.
+2 pts
+Emerging: Redesign addresses symptoms more than causes.
+1 pts
+Novice: No viable redesign; misaligned with goals.
+--
