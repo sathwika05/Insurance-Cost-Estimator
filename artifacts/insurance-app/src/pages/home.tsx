@@ -1,27 +1,32 @@
-import { NavBar } from '@/components/NavBar';
+import { useState } from 'react';
+import { NavBar, type TabId } from '@/components/NavBar';
 import { PredictorSection } from '@/components/PredictorSection';
 import { AboutModelSection } from '@/components/AboutModelSection';
 import { PerformanceSection } from '@/components/PerformanceSection';
 import { DatasetSection } from '@/components/DatasetSection';
-import { ArchitectureSection } from '@/components/ArchitectureSection';
-import { FooterSection } from '@/components/FooterSection';
+
+const PANELS: Record<TabId, React.ReactNode> = {
+  predictor:   <PredictorSection />,
+  about:       <AboutModelSection />,
+  performance: <PerformanceSection />,
+  dataset:     <DatasetSection />,
+};
 
 export default function Home() {
+  const [active, setActive] = useState<TabId>('predictor');
+
   return (
-    <div className="min-h-dvh bg-background">
-      {/* Sticky top navigation */}
-      <NavBar />
+    <div className="flex h-dvh overflow-hidden bg-background">
+      {/* Sidebar / mobile top bar */}
+      <NavBar active={active} onNav={setActive} />
 
-      {/* Push content below the fixed nav (64px = h-16) */}
-      <main className="pt-16">
-        <PredictorSection />
-        <AboutModelSection />
-        <PerformanceSection />
-        <DatasetSection />
-        <ArchitectureSection />
+      {/* Content panel — offset for sidebar on desktop, top bar on mobile */}
+      <main
+        key={active}
+        className="flex-1 overflow-y-auto md:ml-56 mt-14 md:mt-0"
+      >
+        {PANELS[active]}
       </main>
-
-      <FooterSection />
     </div>
   );
 }
