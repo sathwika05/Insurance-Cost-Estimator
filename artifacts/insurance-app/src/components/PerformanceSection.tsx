@@ -1,26 +1,29 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Target } from 'lucide-react';
+import { Target, TrendingDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
   RadialBarChart,
   RadialBar,
   ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  Radar,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
+  Cell,
 } from 'recharts';
 
-const RADAR_DATA = [
-  { metric: 'MAE',        Linear: 48, Ridge: 48, Lasso: 48, Tree: 69, XGBoost: 73, Forest: 100 },
-  { metric: 'RMSE',       Linear: 55, Ridge: 55, Lasso: 55, Tree: 40, XGBoost: 66, Forest: 80  },
-  { metric: 'R²',         Linear: 72, Ridge: 72, Lasso: 72, Tree: 66, XGBoost: 79, Forest: 90  },
-  { metric: 'Stability',  Linear: 90, Ridge: 92, Lasso: 91, Tree: 55, XGBoost: 78, Forest: 95  },
-  { metric: 'Speed',      Linear: 99, Ridge: 99, Lasso: 99, Tree: 95, XGBoost: 60, Forest: 55  },
-];
-
 const R2_DATA = [{ name: 'R²', value: 90, fill: '#0d9488' }];
+
+const CHART_DATA = [
+  { name: 'Linear', value: 4221.96 },
+  { name: 'Ridge',  value: 4226.80 },
+  { name: 'Lasso',  value: 4222.00 },
+  { name: 'Tree',   value: 3284.18 },
+  { name: 'XGB',    value: 3104.85 },
+  { name: 'Forest', value: 2742.90 },
+];
 
 const MODELS_TABLE = [
   { name: 'Linear Regression', mae: '4,221.96', rmse: '6,123.65', r2: '0.723', status: 'Baseline' },
@@ -140,45 +143,37 @@ export function PerformanceSection() {
             ))}
           </div>
 
-          {/* Radar chart */}
+          {/* MAE bar chart */}
           <motion.div
             className="lg:col-span-6"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Card className="bg-white border-border shadow-lg h-full">
-              <CardHeader className="pb-0">
-                <CardTitle className="text-sm font-mono uppercase tracking-widest text-slate-500">
-                  Model Comparison — Normalised Score (0–100)
+            <Card className="bg-white border-border shadow-lg h-full flex flex-col">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-mono uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                  <TrendingDown className="h-4 w-4 text-primary" /> Cross-Validation MAE by Model
                 </CardTitle>
               </CardHeader>
-              <CardContent className="h-72">
+              <CardContent className="flex-1 min-h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={RADAR_DATA} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
-                    <PolarGrid stroke="#e2e8f0" />
-                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: '#64748b' }} />
-                    <Radar name="Random Forest" dataKey="Forest" stroke="#0d9488" fill="#0d9488" fillOpacity={0.25} strokeWidth={2} />
-                    <Radar name="XGBoost" dataKey="XGBoost" stroke="#818cf8" fill="#818cf8" fillOpacity={0.1} strokeWidth={1.5} strokeDasharray="4 2" />
-                    <Radar name="Linear" dataKey="Linear" stroke="#94a3b8" fill="#94a3b8" fillOpacity={0.08} strokeWidth={1} strokeDasharray="2 3" />
+                  <BarChart data={CHART_DATA} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                    <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                    <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(1)}k`} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: 12 }}
+                      cursor={{ fill: '#f1f5f9' }}
+                      contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#0f172a' }}
+                      formatter={(value: number) => [value.toLocaleString(), 'MAE']}
                     />
-                  </RadarChart>
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                      {CHART_DATA.map((entry, i) => (
+                        <Cell key={i} fill={entry.name === 'Forest' ? '#0d9488' : '#cbd5e1'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
-                {/* Legend */}
-                <div className="flex items-center justify-center gap-6 -mt-2">
-                  {[
-                    { label: 'Random Forest', color: '#0d9488' },
-                    { label: 'XGBoost',       color: '#818cf8' },
-                    { label: 'Linear',        color: '#94a3b8' },
-                  ].map((l) => (
-                    <div key={l.label} className="flex items-center gap-1.5">
-                      <span className="inline-block h-2 w-5 rounded-sm" style={{ backgroundColor: l.color }} />
-                      <span className="text-[10px] font-mono text-slate-500">{l.label}</span>
-                    </div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </motion.div>
