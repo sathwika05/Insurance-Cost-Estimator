@@ -60,19 +60,19 @@ export function PerformanceSection() {
           </div>
         </div>
 
-        {/* Top row — R² gauge + 2 KPI tiles + radar */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+        {/* Top row — R² gauge + 2 KPI tiles + bar chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-8">
 
           {/* R² Gauge */}
           <motion.div
-            className="lg:col-span-3"
+            className="lg:col-span-2"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <Card className="bg-white border-border shadow-lg h-full flex flex-col items-center justify-center py-8 px-4">
-              <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-2">R² Score</p>
-              <div className="relative w-40 h-40">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-4">R² Score</p>
+              <div className="relative w-32 h-32">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadialBarChart
                     cx="50%"
@@ -82,24 +82,24 @@ export function PerformanceSection() {
                     startAngle={220}
                     endAngle={-40}
                     data={R2_DATA}
-                    barSize={14}
+                    barSize={12}
                   >
                     <RadialBar dataKey="value" cornerRadius={8} background={{ fill: '#e2e8f0' }} />
                   </RadialBarChart>
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold text-primary font-mono">0.900</span>
-                  <span className="text-[10px] text-slate-400 uppercase tracking-wide mt-0.5">Variance</span>
+                  <span className="text-2xl font-bold text-primary font-mono">0.900</span>
+                  <span className="text-[9px] text-slate-400 uppercase tracking-wide mt-0.5">Variance</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 text-center mt-4 leading-snug">
+              <p className="text-[10px] text-slate-500 text-center mt-4 leading-snug">
                 90% of insurance cost variation is explained by the model
               </p>
             </Card>
           </motion.div>
 
           {/* MAE + RMSE stacked */}
-          <div className="lg:col-span-3 flex flex-col gap-6">
+          <div className="lg:col-span-3 flex flex-col gap-5">
             {[
               {
                 label: 'Mean Absolute Error',
@@ -145,7 +145,7 @@ export function PerformanceSection() {
 
           {/* MAE bar chart */}
           <motion.div
-            className="lg:col-span-6"
+            className="lg:col-span-7"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
