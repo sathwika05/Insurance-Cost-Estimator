@@ -47,3 +47,10 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Python virtualenvs and cache
+artifacts/ml-server/.venv/
+artifacts/ml-server/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
