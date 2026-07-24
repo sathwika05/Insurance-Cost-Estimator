@@ -29,6 +29,7 @@ NODE_ENV = "production"
 
 [services.production.health.startup]
 path = "/api/healthz"
+timeoutSeconds = 60
 
 [[services]]
 localPort = 8001
