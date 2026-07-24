@@ -49,3 +49,8 @@ args = ["bash", "artifacts/ml-server/start.sh"]
 
 [services.production.run.env]
 PORT = "8001"
+PRODUCTION = "true"
+
+[services.production.health.startup]
+path = "/api/healthz"
+timeoutSeconds = 120
