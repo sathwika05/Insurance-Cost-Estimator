@@ -39,4 +39,12 @@ paths = ["/api/predict"]
 run = "bash /home/runner/workspace/artifacts/ml-server/start.sh"
 
 [services.production]
-run = "bash /home/runner/workspace/artifacts/ml-server/start.sh"
+
+[services.production.build]
+args = ["bash", "artifacts/ml-server/setup.sh"]
+
+[services.production.run]
+args = ["bash", "artifacts/ml-server/start.sh"]
+
+[services.production.run.env]
+PORT = "8001"

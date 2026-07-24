@@ -47,9 +47,15 @@ Users enter 6 patient details (age, sex, BMI, children, smoker, region) and the 
 
 _Populate as you build._
 
+## Deployment
+
+- Production config lives in each artifact's `.replit-artifact/artifact.toml` (`[services.production]`), not in `.replit`.
+- Frontend deploys as static files from `artifacts/front-end/dist/public` with an SPA rewrite; Express API and Python ML server deploy as separate services routed at `/api` and `/api/predict` by the shared proxy.
+- ML server Python deps install at deploy build time via `bash artifacts/ml-server/setup.sh` (uv + `requirements.txt`); `start.sh` re-runs setup (fast no-op) then starts uvicorn.
+
 ## Gotchas
 
-- The ML Server `.venv` must exist before the workflow starts. If you delete it, run `uv venv artifacts/ml-server/.venv && uv pip install --python artifacts/ml-server/.venv/bin/python fastapi "uvicorn[standard]" pandas numpy joblib scikit-learn xgboost pydantic`.
+- The ML Server `.venv` must exist before the workflow starts. If you delete it, run `bash artifacts/ml-server/setup.sh` (installs from `artifacts/ml-server/requirements.txt`).
 - Do not change `info.title` in the OpenAPI spec — it controls generated filenames.
 - The ML model file must stay at `artifacts/ml-server/insurance_model.joblib`.
 

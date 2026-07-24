@@ -1,0 +1,1 @@
+- [Deployment config](deployment-config.md) — prod config lives in artifact.toml, not .replit; dev workflow runs need absolute paths, prod runs from repo root; ML deps install at build via setup.sh.
