@@ -11,12 +11,12 @@ paths = [ "/" ]
 localPort = 25780
 
 [services.development]
-run = "pnpm --filter @workspace/insurance-app run dev"
+run = "pnpm --filter @workspace/front-end run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/insurance-app", "run", "build" ]
+build = [ "pnpm", "--filter", "@workspace/front-end", "run", "build" ]
 serve = "static"
-publicDir = "artifacts/insurance-app/dist/public"
+publicDir = "artifacts/front-end/dist/public"
 
 [[services.production.rewrites]]
 from = "/*"

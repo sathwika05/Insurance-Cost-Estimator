@@ -168,7 +168,7 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
-  artifacts/api-server:
+  artifacts/back-end:
     dependencies:
       '@workspace/api-zod':
         specifier: workspace:*
@@ -220,7 +220,7 @@ importers:
         specifier: 3.1.0
         version: 3.1.0
 
-  artifacts/insurance-app:
+  artifacts/front-end:
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
