@@ -1,0 +1,252 @@
+Search
+
+
+Time
+Deployment
+Source
+Log
+
+2026-07-24 09:32:37.45
+4513a3b1
+System
+starting artifact processes for monorepo deployment
+
+2026-07-24 09:32:37.45
+4513a3b1
+System
+artifact mode enabled runnable=2 static=1
+
+2026-07-24 09:32:37.45
+4513a3b1
+System
+starting up user application
+
+2026-07-24 09:32:37.45
+4513a3b1
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+
+2026-07-24 09:32:37.46
+4513a3b1
+System
+forwarding local port 0 to external port 80 (mapped as 1104)
+
+2026-07-24 09:32:37.46
+4513a3b1
+System
+registered static handler for artifact path=/ publicDir=artifacts/front-end/dist/public
+
+2026-07-24 09:32:37.46
+4513a3b1
+System
+waiting for runnable artifact ports ports=[8080 8001]
+
+2026-07-24 09:32:37.46
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:37.46
+4513a3b1
+System
+baseline ports snapshot before artifact start ports=[1106 1105 1104]
+
+2026-07-24 09:32:37.47
+4513a3b1
+System
+starting artifact processes count=2
+
+2026-07-24 09:32:37.47
+4513a3b1
+System
+starting artifact process port=8080 artifact=artifacts/back-end args=[node --enable-source-maps artifacts/back-end/dist/index.mjs]
+
+2026-07-24 09:32:37.47
+4513a3b1
+System
+starting artifact process artifact=artifacts/back-end args=[bash artifacts/ml-server/start.sh] port=8001
+
+2026-07-24 09:32:37.47
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:37.48
+4513a3b1
+System
+artifact process started artifact=artifacts/back-end pid=19
+
+2026-07-24 09:32:37.48
+4513a3b1
+System
+artifact process started artifact=artifacts/back-end pid=18
+
+2026-07-24 09:32:37.49
+4513a3b1
+System
+healthcheck failed error=healthcheck /api returned status 500
+
+2026-07-24 09:32:37.51
+4513a3b1
+User
+Creating virtual environment...
+
+2026-07-24 09:32:37.53
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:37.55
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:37.68
+4513a3b1
+System
+healthcheck failed error=healthcheck /api returned status 500
+
+2026-07-24 09:32:37.98
+4513a3b1
+System
+artifact port detected port=8080 detected=1 expected=2
+
+2026-07-24 09:32:37.98
+4513a3b1
+User
+{"level":30,"time":1784899957985,"pid":18,"hostname":"localhost","port":8080,"msg":"Server listening"}
+
+2026-07-24 09:32:37.98
+4513a3b1
+System
+healthcheck failed error=healthcheck /api returned status 500
+
+2026-07-24 09:32:38.04
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:38.04
+4513a3b1
+User
+{"level":30,"time":1784899958043,"pid":18,"hostname":"localhost","req":{"id":1,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":19,"msg":"request completed"}
+
+2026-07-24 09:32:38.27
+4513a3b1
+User
+{"level":30,"time":1784899958271,"pid":18,"hostname":"localhost","req":{"id":2,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:38.27
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:38.64
+4513a3b1
+User
+{"level":30,"time":1784899958649,"pid":18,"hostname":"localhost","req":{"id":3,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:38.64
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:43.29
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:43.29
+4513a3b1
+User
+{"level":30,"time":1784899963295,"pid":18,"hostname":"localhost","req":{"id":6,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:44.32
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:44.32
+4513a3b1
+User
+{"level":30,"time":1784899964327,"pid":18,"hostname":"localhost","req":{"id":7,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:44.43
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:44.43
+4513a3b1
+User
+{"level":30,"time":1784899964433,"pid":18,"hostname":"localhost","req":{"id":8,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:45.75
+4513a3b1
+User
+Starting ML prediction server on port 8001...
+
+2026-07-24 09:32:45.75
+4513a3b1
+User
+ML server setup complete.
+
+2026-07-24 09:32:46.00
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:46.00
+4513a3b1
+User
+{"level":30,"time":1784899966000,"pid":18,"hostname":"localhost","req":{"id":9,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:47.89
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:47.89
+4513a3b1
+User
+{"level":30,"time":1784899967893,"pid":18,"hostname":"localhost","req":{"id":10,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:48.81
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:48.81
+4513a3b1
+User
+{"level":30,"time":1784899968812,"pid":18,"hostname":"localhost","req":{"id":11,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:50.80
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:50.80
+4513a3b1
+User
+{"level":30,"time":1784899970802,"pid":18,"hostname":"localhost","req":{"id":12,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":1,"msg":"request completed"}
+
+2026-07-24 09:32:51.90
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:51.90
+4513a3b1
+User
+{"level":30,"time":1784899971907,"pid":18,"hostname":"localhost","req":{"id":13,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":0,"msg":"request completed"}
+
+2026-07-24 09:32:52.61
+4513a3b1
+System
+healthcheck failed error=healthcheck /api/predict returned status 500
+
+2026-07-24 09:32:52.61
+4513a3b1
+User
+{"level":30,"time":1784899972616,"pid":18,"hostname":"localhost","req":{"id":14,"method":"GET","url":"/api/healthz"},"res":{"statusCode":200},"responseTime":0,"msg":"request completed"}
