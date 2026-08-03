@@ -72,6 +72,12 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // Local dev only: Replit's shared proxy does this routing in production/preview.
+    // /api/predict goes to the Python ML server; everything else under /api goes to Express.
+    proxy: {
+      '/api/predict': { target: 'http://localhost:8001', changeOrigin: true },
+      '/api': { target: 'http://localhost:8080', changeOrigin: true },
+    },
   },
   preview: {
     port,
