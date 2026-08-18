@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavBar, type TabId } from '@/components/NavBar';
 import { PredictorSection } from '@/components/PredictorSection';
+import { UseCaseSection } from '@/components/UseCaseSection';
 import { AboutModelSection } from '@/components/AboutModelSection';
 import { PerformanceSection } from '@/components/PerformanceSection';
 import { DatasetSection } from '@/components/DatasetSection';
@@ -10,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const PANELS: Record<TabId, React.ReactNode> = {
   predictor:   <PredictorSection />,
+  usecase:     <UseCaseSection />,
   about:       <div className="space-y-0 divide-y divide-border/50"><AboutModelSection /><ArchitectureSection /></div>,
   performance: <PerformanceSection />,
   dataset:     <DatasetSection />,

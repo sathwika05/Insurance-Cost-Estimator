@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Activity, Menu, X } from 'lucide-react';
 import { useHealthCheck } from '@workspace/api-client-react';
 
-export type TabId = 'predictor' | 'about' | 'performance' | 'dataset';
+export type TabId = 'predictor' | 'usecase' | 'about' | 'performance' | 'dataset';
 
 interface NavBarProps {
   active: TabId;
@@ -11,6 +11,7 @@ interface NavBarProps {
 
 const NAV_ITEMS: { id: TabId; label: string; desc: string }[] = [
   { id: 'predictor',   label: 'Predictor',    desc: 'Run a prediction'    },
+  { id: 'usecase',     label: 'Use Case',     desc: 'Problem & solution'  },
   { id: 'about',       label: 'About Model',  desc: 'How it was built'    },
   { id: 'performance', label: 'Performance',  desc: 'Model metrics'       },
   { id: 'dataset',     label: 'Dataset',      desc: 'Data & EDA insights' },
@@ -31,14 +32,14 @@ export function NavBar({ active, onNav }: NavBarProps) {
       <header className="fixed inset-x-0 top-0 z-40 bg-[#0f172a] text-white flex-none shadow-sm h-[72px] flex items-center">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-full">
           {/* Logo */}
-          <div className="flex items-center gap-3 md:w-1/4">
+          <div className="flex items-center gap-3 md:w-auto xl:w-1/4">
             <div className="bg-teal-500/20 p-2 rounded-lg text-teal-400">
               <Activity className="w-5 h-5 md:w-6 md:h-6" />
             </div>
-            <span className="font-semibold text-white tracking-tight hidden sm:inline-block">
+            <span className="font-semibold text-white tracking-tight hidden xl:inline-block">
               Medical Insurance Cost Predictor
             </span>
-            <span className="font-semibold text-white tracking-tight sm:hidden">
+            <span className="font-semibold text-white tracking-tight whitespace-nowrap xl:hidden">
               Cost Predictor
             </span>
           </div>
@@ -51,18 +52,18 @@ export function NavBar({ active, onNav }: NavBarProps) {
                 <div
                   key={tab.id}
                   onClick={() => handleNav(tab.id)}
-                  className={`flex flex-col justify-center items-center flex-1 h-full border-b-[3px] cursor-pointer transition-colors hover:bg-white/5 ${
+                  className={`flex flex-col justify-center items-center flex-1 h-full px-1 border-b-[3px] cursor-pointer transition-colors hover:bg-white/5 ${
                     isActive ? 'border-[#0d9488]' : 'border-transparent'
                   }`}
                 >
                   <span
-                    className={`text-sm font-semibold ${
+                    className={`text-[13px] xl:text-sm font-semibold whitespace-nowrap ${
                       isActive ? 'text-white' : 'text-slate-300'
                     }`}
                   >
                     {tab.label}
                   </span>
-                  <span className="text-[11px] text-slate-400 mt-0.5 hidden lg:block">
+                  <span className="text-[11px] text-slate-400 mt-0.5 hidden xl:block whitespace-nowrap">
                     {tab.desc}
                   </span>
                 </div>
@@ -71,9 +72,9 @@ export function NavBar({ active, onNav }: NavBarProps) {
           </nav>
 
           {/* Right Side: Badge & Mobile Menu */}
-          <div className="flex items-center justify-end gap-4 md:w-1/4">
+          <div className="flex items-center justify-end gap-4 md:w-auto xl:w-1/4">
             {/* Badge */}
-            <div className="hidden sm:flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10">
+            <div className="hidden sm:flex md:hidden lg:flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 whitespace-nowrap">
               {health?.status === 'ok' ? (
                 <>
                   <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.4)]"></span>

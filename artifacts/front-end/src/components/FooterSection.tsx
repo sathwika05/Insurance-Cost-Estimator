@@ -44,15 +44,6 @@ export function FooterSection() {
           </div>
           
         </div>
-        
-        <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
-            ISEM 503 · {new Date().getFullYear()}
-          </p>
-          <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
-            Deployed via Replit AI
-          </p>
-        </div>
       </div>
     </footer>
   );
