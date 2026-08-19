@@ -72,6 +72,11 @@ Hosted on Render as a Docker web service — `render.yaml` defines it (free plan
 check on `/api/healthz`, redeploy on every push to `main`). Render injects its own `PORT`,
 which `config/settings.py` reads, so the image needs no change per host.
 
+Render's free plan spins a service down after 15 minutes without inbound traffic, so an
+external cron (cron-job.org) requests `/api/healthz` every 5 minutes to keep it warm. A
+GitHub Actions schedule was tried first and removed: its runs landed 18–58 minutes apart
+rather than the requested 10, so the service slept between most of them.
+
 The YAML front matter at the top of this file also makes the repo deployable as a Hugging
 Face Docker Space, which requires a PRO account.
 
