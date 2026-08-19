@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+*.tsbuildinfo
+.playwright-mcp
+attached_assets
+*.png
+*.docx

@@ -54,3 +54,6 @@ artifacts/ml-server/__pycache__/
 **/__pycache__/
 *.pyc
 *.pyo
+
+# Front-end build copied into the ML server image at Docker build time
+artifacts/ml-server/public/
