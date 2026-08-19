@@ -1,0 +1,14 @@
+# Render Blueprint — deploys the single-image build (FastAPI serving /api/* plus
+# the compiled React front-end) as one free web service.
+#
+# Render injects its own PORT at runtime; config/settings.py reads it, and
+# main.py binds 0.0.0.0, so no Dockerfile change is needed.
+services:
+  - name: insurance-cost-estimator
+    type: web
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/healthz
+    autoDeployTrigger: commit

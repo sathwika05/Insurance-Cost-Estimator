@@ -68,8 +68,12 @@ docker build -t insurance-cost-estimator .
 docker run --rm -p 7860:7860 insurance-cost-estimator   # http://localhost:7860
 ```
 
-The same `Dockerfile` is what Hugging Face Spaces builds from — the YAML front matter
-above configures the Space.
+Hosted on Render as a Docker web service — `render.yaml` defines it (free plan, health
+check on `/api/healthz`, redeploy on every push to `main`). Render injects its own `PORT`,
+which `config/settings.py` reads, so the image needs no change per host.
+
+The YAML front matter at the top of this file also makes the repo deployable as a Hugging
+Face Docker Space, which requires a PRO account.
 
 ## API
 
@@ -77,7 +81,7 @@ above configures the Space.
 curl -X POST http://localhost:7860/api/predict \
   -H 'content-type: application/json' \
   -d '{"age":35,"sex":"male","bmi":24.5,"children":1,"smoker":"no","region":"southeast"}'
-# {"estimated_annual_cost":6421.37,"currency":"USD"}
+# {"estimated_annual_cost":5576.34,"currency":"USD"}
 ```
 
 Cost estimates are model outputs for exploration, not insurance quotes.
