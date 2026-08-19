@@ -1,0 +1,38 @@
+# Render's free plan spins a service down after 15 minutes without inbound
+# traffic, and the next visitor then waits ~1 minute for it to wake. This pings
+# the health endpoint often enough to keep it running.
+#
+# Every 10 minutes rather than 14: GitHub's scheduled runs are best-effort and
+# are frequently delayed by several minutes, so a 14-minute cadence would drift
+# past Render's 15-minute idle window. Continuous uptime costs ~744 of Render's
+# 750 free instance-hours per month, which fits — but leaves no room for a
+# second always-on free service in the same account.
+#
+# Note: GitHub disables scheduled workflows in repos with no commits for 60
+# days. If the app starts sleeping again, check whether this workflow was
+# auto-disabled and re-enable it in the Actions tab.
+name: Keep Render service awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+# Never let a slow wake-up pile up overlapping runs.
+concurrency:
+  group: keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl -fsS \
+            --max-time 120 \
+            --retry 3 \
+            --retry-delay 20 \
+            --retry-connrefused \
+            https://insurance-cost-estimator-j5cg.onrender.com/api/healthz
