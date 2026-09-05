@@ -8,5 +8,7 @@ node_modules
 *.tsbuildinfo
 .playwright-mcp
 attached_assets
-*.png
-*.docx
+# Root-level scratch files only — nested assets (e.g. the front-end public/
+# OG image) must still reach the build context.
+/prediction.png
+/Medical_Insurance_Cost_Predictor_Report.docx
